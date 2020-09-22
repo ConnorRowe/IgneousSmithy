@@ -3,6 +3,7 @@ package com.connorrowe.igneoussmithy.client.model;
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.items.Material;
 import com.connorrowe.igneoussmithy.items.PartType;
+import com.connorrowe.igneoussmithy.items.ToolHead;
 import com.connorrowe.igneoussmithy.items.ToolPart;
 import com.connorrowe.igneoussmithy.tools.ColourHelper;
 import com.connorrowe.igneoussmithy.tools.ModelHelper;
@@ -44,7 +45,7 @@ public final class PartModel implements IModelGeometry<PartModel>
                 owner.getCameraTransforms());
     }
 
-    public IBakedModel bake(Material material, PartType partType,
+    public IBakedModel bake(Material material, PartType partType, @Nullable ToolHead toolHead,
                             IModelConfiguration owner, ModelBakery bakery,
                             Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
                             ItemOverrideList overrides)
@@ -56,8 +57,13 @@ public final class PartModel implements IModelGeometry<PartModel>
         String texName = "";
 
         if (partType == PartType.HEAD)
-            texName = "item/tool/pick_head";
-        else if (partType == PartType.BINDING)
+        {
+            texName = "item/tool/pickaxe_head";
+            if (toolHead != null)
+            {
+                texName = "item/tool/" + toolHead.getToolType().name + "_head";
+            }
+        } else if (partType == PartType.BINDING)
             texName = "item/part/binding";
         else if (partType == PartType.HANDLE)
             texName = "item/tool/handle";
@@ -106,14 +112,20 @@ public final class PartModel implements IModelGeometry<PartModel>
 
             Material material = ToolPart.getMaterial(stack);
             PartType partType = PartType.HEAD;
+            ToolHead toolHead = null;
 
             if (stack.getItem() instanceof ToolPart)
             {
                 ToolPart p = (ToolPart) stack.getItem();
                 partType = p.getPartType();
+
+                if (p instanceof ToolHead)
+                {
+                    toolHead = (ToolHead) p;
+                }
             }
 
-            return this.model.bake(material, partType, this.owner, this.bakery, this.spriteGetter,
+            return this.model.bake(material, partType, toolHead, this.owner, this.bakery, this.spriteGetter,
                     this.modelTransform, ItemOverrideList.EMPTY);
         }
     }

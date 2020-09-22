@@ -3,7 +3,9 @@ package com.connorrowe.igneoussmithy.items;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import org.codehaus.plexus.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,6 +19,13 @@ public class ToolHead extends ToolPart
     {
         super(PartType.HEAD);
         this.toolType = toolType;
+    }
+
+    @Nonnull
+    @Override
+    public ITextComponent getDisplayName(@Nonnull ItemStack stack)
+    {
+        return new StringTextComponent(getMaterial(stack).name.getString() + " " + StringUtils.capitalizeFirstLetter(toolType.name) + " Head");
     }
 
     @Override

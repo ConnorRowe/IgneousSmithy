@@ -1,8 +1,9 @@
 package com.connorrowe.igneoussmithy.client.model;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
-import com.connorrowe.igneoussmithy.items.DynamicPickaxe;
+import com.connorrowe.igneoussmithy.items.DynamicTool;
 import com.connorrowe.igneoussmithy.items.Material;
+import com.connorrowe.igneoussmithy.items.ToolType;
 import com.connorrowe.igneoussmithy.tools.ColourHelper;
 import com.connorrowe.igneoussmithy.tools.ModelHelper;
 import com.google.common.collect.ImmutableList;
@@ -42,7 +43,7 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                 owner.getCameraTransforms());
     }
 
-    public IBakedModel bake(boolean broken, List<Integer> matColours, String[] textures,
+    public IBakedModel bake(boolean broken, List<Integer> matColours, String[] textures, ToolType toolType,
                             IModelConfiguration owner, ModelBakery bakery,
                             Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
                             ItemOverrideList overrides)
@@ -60,10 +61,10 @@ public final class ToolModel implements IModelGeometry<ToolModel>
         {
             String texName;
             if (i == 0)
-                texName = "pick_head";
+                texName = "handle";
             else if (i == 1)
-                texName = "pick_bind";
-            else texName = "handle";
+                texName = toolType.name + "_bind";
+            else texName = toolType.name + "_head";
 
             texName += "_" + textures[i];
 
@@ -110,16 +111,16 @@ public final class ToolModel implements IModelGeometry<ToolModel>
         protected IBakedModel getBakedModel(IBakedModel originalModel, ItemStack stack,
                                             @Nullable World world, @Nullable LivingEntity entity)
         {
-            System.out.println("getBakedModel: " + DynamicPickaxe.getMaterials(stack).get(0).name.getString() + " tool");
+            System.out.println("getBakedModel: " + DynamicTool.getHeadMat(stack).name.getString() + DynamicTool.getToolType(stack).name);
 
-            boolean isBroken = DynamicPickaxe.getBroken(stack);
-            String[] textures = DynamicPickaxe.getMatTextures(stack);
+            boolean isBroken = DynamicTool.getBroken(stack);
+            String[] textures = DynamicTool.getMatTextures(stack);
 
             List<Integer> matColours = new ArrayList<>();
-            NonNullList<Material> materials = DynamicPickaxe.getMaterials(stack);
+            NonNullList<Material> materials = DynamicTool.getMaterials(stack);
             materials.forEach(material -> matColours.add(material.colour));
 
-            return this.model.bake(isBroken, matColours, textures, this.owner, this.bakery, this.spriteGetter,
+            return this.model.bake(isBroken, matColours, textures, DynamicTool.getToolType(stack), this.owner, this.bakery, this.spriteGetter,
                     this.modelTransform, ItemOverrideList.EMPTY);
         }
     }

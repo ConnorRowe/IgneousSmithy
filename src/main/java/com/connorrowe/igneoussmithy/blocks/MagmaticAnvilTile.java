@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -186,9 +187,17 @@ public class MagmaticAnvilTile extends TileEntity
                         return;
 
                     //Slots should be valid - assemble tool
-                    ItemStack craftedStack = new ItemStack(ModItems.DYNAMIC_PICKAXE.get());
-                    DynamicPickaxe.initialiseStack(craftedStack);
-                    DynamicPickaxe.setMaterials(craftedStack, ToolPart.getMaterial(h.getStackInSlot(headSlot)), ToolPart.getMaterial(h.getStackInSlot(bindSlot)), ToolPart.getMaterial(h.getStackInSlot(handSlot)));
+                    Item tool = Items.AIR;
+                    ToolType toolType = ((ToolHead) (h.getStackInSlot(headSlot).getItem())).getToolType();
+
+                    if (toolType.equals(ToolType.PICKAXE))
+                        tool = ModItems.DYNAMIC_PICKAXE.get();
+                    else if (toolType.equals(ToolType.SHOVEL))
+                        tool = ModItems.DYNAMIC_SHOVEL.get();
+
+                    ItemStack craftedStack = new ItemStack(tool);
+                    DynamicTool.initialiseStack(craftedStack);
+                    DynamicTool.setMaterials(craftedStack, ToolPart.getMaterial(h.getStackInSlot(headSlot)), ToolPart.getMaterial(h.getStackInSlot(bindSlot)), ToolPart.getMaterial(h.getStackInSlot(handSlot)));
 
                     for (ItemStack stack : h.getStacks())
                     {

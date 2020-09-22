@@ -5,7 +5,6 @@ import com.connorrowe.igneoussmithy.client.model.PartLoader;
 import com.connorrowe.igneoussmithy.client.model.ToolLoader;
 import com.connorrowe.igneoussmithy.data.MaterialManager;
 import com.connorrowe.igneoussmithy.items.Trait;
-import com.connorrowe.igneoussmithy.setup.ModItems;
 import com.connorrowe.igneoussmithy.setup.ModTileEntities;
 import com.connorrowe.igneoussmithy.setup.Registration;
 import net.minecraft.client.Minecraft;
@@ -20,7 +19,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -110,8 +108,10 @@ class SideProxy implements IProxy
             {
                 for (String t : knownMaterialTextures)
                 {
-                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pick_head_" + t));
-                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pick_bind_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pickaxe_head_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pickaxe_bind_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/shovel_head_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/shovel_bind_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/handle_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/part/binding_" + t));
                 }

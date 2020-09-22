@@ -1,7 +1,7 @@
 package com.connorrowe.igneoussmithy;
 
 import com.connorrowe.igneoussmithy.data.MaterialManager;
-import com.connorrowe.igneoussmithy.items.DynamicPickaxe;
+import com.connorrowe.igneoussmithy.items.DynamicTool;
 import com.connorrowe.igneoussmithy.items.Material;
 import com.connorrowe.igneoussmithy.items.ToolPart;
 import com.connorrowe.igneoussmithy.setup.ModBlocks;
@@ -65,6 +65,9 @@ public class IgneousSmithy
                 ItemStack stack = new ItemStack(ModItems.PICKAXE_HEAD.get());
                 ToolPart.setMaterial(stack, material);
                 items.add(stack);
+                stack = new ItemStack(ModItems.SHOVEL_HEAD.get());
+                ToolPart.setMaterial(stack, material);
+                items.add(stack);
                 stack = new ItemStack(ModItems.BINDING.get());
                 ToolPart.setMaterial(stack, material);
                 items.add(stack);
@@ -76,8 +79,12 @@ public class IgneousSmithy
             for (Material material : MaterialManager.getValues())
             {
                 ItemStack stack = new ItemStack(ModItems.DYNAMIC_PICKAXE.get());
-                DynamicPickaxe.initialiseStack(stack);
-                DynamicPickaxe.setMaterials(stack, material, material, material);
+                DynamicTool.initialiseStack(stack);
+                DynamicTool.setMaterials(stack, material, material, material);
+                items.add(stack);
+                stack = new ItemStack(ModItems.DYNAMIC_SHOVEL.get());
+                DynamicTool.initialiseStack(stack);
+                DynamicTool.setMaterials(stack, material, material, material);
                 items.add(stack);
             }
         }

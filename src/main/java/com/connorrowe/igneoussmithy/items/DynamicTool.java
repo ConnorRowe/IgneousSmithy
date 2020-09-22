@@ -2,46 +2,61 @@ package com.connorrowe.igneoussmithy.items;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.data.MaterialManager;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
+import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
+import org.codehaus.plexus.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class DynamicPickaxe extends PickaxeItem
+public class DynamicTool extends ToolItem
 {
     private static final String NBT_MATERIAL_NAMESPACE = "mat_namespace";
     private static final String NBT_MATERIAL_PATH = "mat_path";
     private static final String NBT_MAT_RESOURCE_LOCATIONS = "mat_res_locs";
     private static final String NBT_BROKEN = "broken";
 
-    public DynamicPickaxe()
+    public ToolType toolType;
+
+    public DynamicTool(ToolType toolType)
     {
-
-
-        this(ItemTier.IRON, 1, -2.8f, new Properties().group(IgneousSmithy.IgneousGroup.instance));
+        super(1, -2.8f, ItemTier.WOOD, toolType.effectiveBlocks, new Properties().group(IgneousSmithy.IgneousGroup.instance));
+        this.toolType = toolType;
     }
 
-    public DynamicPickaxe(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builder)
+    @Override
+    public boolean canHarvestBlock(ItemStack stack, BlockState blockIn)
     {
-        super(tier, attackDamageIn, attackSpeedIn, builder);
+        int i = getHeadMat(stack).harvestLevel;
+        if (blockIn.getHarvestTool() == toolType.forgeType)
+        {
+            return i >= blockIn.getHarvestLevel();
+        } else
+        {
+            net.minecraft.block.material.Material material = blockIn.getMaterial();
+            return material == net.minecraft.block.material.Material.ROCK || material == net.minecraft.block.material.Material.IRON || material == net.minecraft.block.material.Material.ANVIL;
+        }
     }
 
     public static void initialiseStack(ItemStack stack)
@@ -61,13 +76,13 @@ public class DynamicPickaxe extends PickaxeItem
             switch (i)
             {
                 case 0:
-                    mat = headMaterial;
+                    mat = handleMaterial;
                     break;
                 case 1:
                     mat = bindMaterial;
                     break;
                 case 2:
-                    mat = handleMaterial;
+                    mat = headMaterial;
                     break;
                 default:
                     mat = Material.DEFAULT;
@@ -102,11 +117,42 @@ public class DynamicPickaxe extends PickaxeItem
         return materials;
     }
 
+    public static Material getMaterial(ItemStack stack, int num)
+    {
+        CompoundNBT resourceNBT = stack.getOrCreateTag().getList(NBT_MAT_RESOURCE_LOCATIONS, 10).getCompound(num);
+
+        return MaterialManager.get(new ResourceLocation(resourceNBT.getString(NBT_MATERIAL_NAMESPACE), resourceNBT.getString(NBT_MATERIAL_PATH)));
+    }
+
+    public static Material getHeadMat(ItemStack stack)
+    {
+        return getMaterial(stack, 2);
+    }
+
+    public static Material getBindMat(ItemStack stack)
+    {
+        return getMaterial(stack, 1);
+    }
+
+    public static Material getHandMat(ItemStack stack)
+    {
+        return getMaterial(stack, 0);
+    }
+
     public static boolean getBroken(ItemStack stack)
     {
         CompoundNBT compound = stack.getOrCreateTag();
 
         return compound.getBoolean(NBT_BROKEN);
+    }
+
+    @Nullable
+    public static ToolType getToolType(ItemStack stack)
+    {
+        if (!(stack.getItem() instanceof DynamicTool))
+            return null;
+
+        return ((DynamicTool) stack.getItem()).toolType;
     }
 
     @Override
@@ -119,11 +165,6 @@ public class DynamicPickaxe extends PickaxeItem
         setBroken(stack, dmg >= maxdmg - 1);
     }
 
-//    @Override
-//    public float getXpRepairRatio(ItemStack stack)
-//    {
-//        return 0;
-//    }
 
     public static void setBroken(ItemStack stack, boolean value)
     {
@@ -135,8 +176,7 @@ public class DynamicPickaxe extends PickaxeItem
     @Override
     public int getMaxDamage(ItemStack stack)
     {
-        NonNullList<Material> mats = getMaterials(stack);
-        return Math.max(1, ((int) ((((float) mats.get(0).durability) * mats.get(1).bindingMultiplier) + mats.get(1).bindingDurability)));
+        return Math.max(1, ((int) ((((float) getHeadMat(stack).durability) * getBindMat(stack).bindingMultiplier) + getBindMat(stack).bindingDurability)));
     }
 
     @Override
@@ -153,7 +193,7 @@ public class DynamicPickaxe extends PickaxeItem
     {
         if (stack.getDamage() + amount >= stack.getMaxDamage())
         {
-            setBroken(stack,true);
+            setBroken(stack, true);
             return 0;
         }
 
@@ -172,7 +212,7 @@ public class DynamicPickaxe extends PickaxeItem
     @Override
     public boolean getIsRepairable(@Nonnull ItemStack toRepair, ItemStack repair)
     {
-        return getMaterials(toRepair).get(0).repairItem.equals(repair.getItem());
+        return getHeadMat(toRepair).repairItem.equals(repair.getItem());
     }
 
     public static String[] getMatTextures(ItemStack stack)
@@ -192,7 +232,18 @@ public class DynamicPickaxe extends PickaxeItem
     @Override
     public float getDestroySpeed(@Nonnull ItemStack stack, @Nonnull BlockState state)
     {
-        return getBroken(stack) ? 0.0f : getMaterials(stack).get(0).efficiency;
+        if (getBroken(stack))
+            return 0.1f;
+
+        if (getToolTypes(stack).stream().anyMatch(state::isToolEffective)) return getHeadMat(stack).efficiency;
+        return toolType.effectiveBlocks.contains(state.getBlock()) ? getHeadMat(stack).efficiency : 1.0F;
+    }
+
+    @Nonnull
+    @Override
+    public Set<net.minecraftforge.common.ToolType> getToolTypes(@Nonnull ItemStack stack)
+    {
+        return ImmutableSet.of(toolType.forgeType);
     }
 
     @Override
@@ -202,9 +253,9 @@ public class DynamicPickaxe extends PickaxeItem
     }
 
     @Override
-    public int getHarvestLevel(@Nonnull ItemStack stack, @Nonnull ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState)
+    public int getHarvestLevel(@Nonnull ItemStack stack, @Nonnull net.minecraftforge.common.ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState)
     {
-        return getMaterials(stack).get(0).harvestLevel;
+        return getHeadMat(stack).harvestLevel;
     }
 
     @Override
@@ -216,7 +267,7 @@ public class DynamicPickaxe extends PickaxeItem
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getMaterials(stack).get(0).name.getString() + " Pickaxe");
+        return new StringTextComponent(getHeadMat(stack).name.getString() + " " + StringUtils.capitalizeFirstLetter(toolType.name));
     }
 
     @Override
@@ -323,27 +374,22 @@ public class DynamicPickaxe extends PickaxeItem
             tooltip.add(durability);
         }
 
-        if (Screen.hasShiftDown() || Screen.hasAltDown())
+        if (Screen.hasShiftDown())
         {
             NonNullList<Material> materials = getMaterials(stack);
 
-            if(Screen.hasShiftDown())
-            {
-                tooltip.add(new StringTextComponent(materials.get(0).name.getString() + " Head"));
-                tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(0), PartType.HEAD));
-                tooltip.add(new StringTextComponent(materials.get(1).name.getString() + " Binding"));
-                tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(1), PartType.BINDING));
-                tooltip.add(new StringTextComponent(materials.get(2).name.getString() + " Handle"));
-                tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(2), PartType.HANDLE));
-            }
-            else
-            {
-                getAllTraits(stack).forEach(t -> tooltip.add(t.toTextComponent()));
-            }
+            tooltip.add(new StringTextComponent(materials.get(2).name.getString() + " Head"));
+            tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(2), PartType.HEAD));
+            tooltip.add(new StringTextComponent(materials.get(1).name.getString() + " Binding"));
+            tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(1), PartType.BINDING));
+            tooltip.add(new StringTextComponent(materials.get(0).name.getString() + " Handle"));
+            tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(0), PartType.HANDLE));
         } else
         {
+            getAllTraits(stack).forEach(t -> tooltip.add(t.toTextComponent()));
+
             tooltip.add(shiftUp);
-            tooltip.add(altUp);
+            //tooltip.add(altUp);
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
@@ -354,13 +400,13 @@ public class DynamicPickaxe extends PickaxeItem
         List<Trait> traits = new ArrayList<>();
         NonNullList<Material> mats = getMaterials(stack);
 
-        for(int i = 0; i < mats.size(); i++)
+        for (int i = 0; i < mats.size(); i++)
         {
-            if(i == 0)
+            if (i == 2)
             {
                 mats.get(i).headOnlyTraits.forEach(t ->
                 {
-                    if(!traits.contains(t))
+                    if (!traits.contains(t))
                     {
                         traits.add(t);
                     }
@@ -369,7 +415,7 @@ public class DynamicPickaxe extends PickaxeItem
 
             mats.get(i).allTraits.forEach(t ->
             {
-                if(!traits.contains(t))
+                if (!traits.contains(t))
                 {
                     traits.add(t);
                 }
