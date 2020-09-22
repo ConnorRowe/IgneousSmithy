@@ -1,0 +1,22 @@
+{
+  "name": "Stone",
+  "colour": "828282",
+  "texture": "dull",
+  "rarity": 1,
+  "attack_damage": 1.0,
+  "harvest_level": 1,
+  "durability": 131,
+  "efficiency": 4.0,
+  "enchantability": 5,
+  "binding": {
+    "multiplier": 0.4,
+    "durability": -50
+  },
+  "repair_item": "minecraft:cobblestone",
+  "traits": {
+    "all": [
+    ],
+    "head_only": [
+    ]
+  }
+}

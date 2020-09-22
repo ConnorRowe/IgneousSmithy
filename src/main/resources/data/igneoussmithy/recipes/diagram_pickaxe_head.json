@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    " p "
+  ],
+  "key": {
+    "c": {
+      "tag": "forge:cobblestone"
+    },
+    "p": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "item": "igneoussmithy:diagram_pickaxe_head"
+  }
+}

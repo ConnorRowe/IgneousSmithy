@@ -1,0 +1,22 @@
+{
+  "name": "Netherite",
+  "colour": "886280",
+  "texture": "shiny",
+  "rarity": 1,
+  "attack_damage": 4.0,
+  "harvest_level": 4,
+  "durability": 2031,
+  "efficiency": 9.0,
+  "enchantability": 15,
+  "binding": {
+    "multiplier": 1.4,
+    "durability": 100
+  },
+  "repair_item": "minecraft:netherite_ingot",
+  "traits": {
+    "all": [
+    ],
+    "head_only": [
+    ]
+  }
+}

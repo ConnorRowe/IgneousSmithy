@@ -1,0 +1,24 @@
+{
+  "name": "Gold",
+  "colour": "FFD700",
+  "texture": "shiny",
+  "rarity": 1,
+  "attack_damage": 3.0,
+  "harvest_level": 0,
+  "durability": 32,
+  "efficiency": 12.0,
+  "enchantability": 22,
+  "binding": {
+    "multiplier": 1.4,
+    "durability": -200
+  },
+  "repair_item": "minecraft:gold_ingot",
+  "traits": {
+    "all": [
+      "malleable"
+    ],
+    "head_only": [
+
+    ]
+  }
+}

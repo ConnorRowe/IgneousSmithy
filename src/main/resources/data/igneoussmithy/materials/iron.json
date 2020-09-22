@@ -1,0 +1,22 @@
+{
+  "name": "Iron",
+  "colour": "F8F8FF",
+  "texture": "shiny",
+  "rarity": 1,
+  "attack_damage": 2.0,
+  "harvest_level": 1,
+  "durability": 250,
+  "efficiency": 6.0,
+  "enchantability": 14,
+  "binding": {
+    "multiplier": 1.1,
+    "durability": 50
+  },
+  "repair_item": "minecraft:iron_ingot",
+  "traits": {
+    "all": [
+    ],
+    "head_only": [
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Wood",
+  "colour": "8b692e",
+  "texture": "dull",
+  "rarity": 1,
+  "attack_damage": 0.0,
+  "harvest_level": 0,
+  "durability": 59,
+  "efficiency": 2.0,
+  "enchantability": 15,
+  "binding": {
+    "multiplier": 1.0,
+    "durability": 0
+  },
+  "repair_item": "minecraft:oak_planks",
+  "traits": {
+    "all": [
+      "mending"
+    ],
+    "head_only": [
+    ]
+  }
+}

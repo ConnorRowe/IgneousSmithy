@@ -1,0 +1,22 @@
+{
+  "name": "Cactus",
+  "colour": "ffffff",
+  "texture": "cactus",
+  "rarity": 1,
+  "attack_damage": 6.0,
+  "harvest_level": 1,
+  "durability": 70,
+  "efficiency": 2.0,
+  "enchantability": 15,
+  "binding": {
+    "multiplier": 0.5,
+    "durability": 0
+  },
+  "repair_item": "minecraft:cactus",
+  "traits": {
+    "all": [
+    ],
+    "head_only": [
+    ]
+  }
+}

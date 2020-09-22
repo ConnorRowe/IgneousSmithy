@@ -1,0 +1,55 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "igneoussmithy:magmatic_anvil",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "reagents",
+                  "target": "BlockEntityTag.reagents",
+                  "op": "replace"
+                },
+                {
+                  "source": "diagram",
+                  "target": "BlockEntityTag.diagram",
+                  "op": "replace"
+                },
+                {
+                  "source": "output",
+                  "target": "BlockEntityTag.output",
+                  "op": "replace"
+                },
+                {
+                  "source": "tank",
+                  "target": "BlockEntityTag.tank",
+                  "op": "replace"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_contents",
+              "entries": [
+                {
+                  "type": "minecraft:dynamic",
+                  "name": "minecraft:contents"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

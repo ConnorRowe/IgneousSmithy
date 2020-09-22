@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c",
+    "p"
+  ],
+  "key": {
+    "c": {
+      "tag": "forge:cobblestone"
+    },
+    "p": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "item": "igneoussmithy:diagram_binding"
+  }
+}
