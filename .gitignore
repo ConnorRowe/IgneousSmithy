@@ -30,6 +30,5 @@ changelog.txt
 
 # igneous
 .assets
-gradle
 logs
 src/generated/resources/.cache/
