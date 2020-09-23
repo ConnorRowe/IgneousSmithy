@@ -144,6 +144,7 @@ public class MagmaticAnvilTile extends TileEntity
         {
             if (outputHandler.getStackInSlot(0).isEmpty())
             {
+                // Part crafting
                 if (diagramHandler.getStackInSlot(0).getItem() instanceof Diagram)
                 {
                     Diagram diagram = (Diagram) diagramHandler.getStackInSlot(0).getItem();
@@ -171,44 +172,71 @@ public class MagmaticAnvilTile extends TileEntity
                     }
                 }
 
-                //Dynamic tool craft
+                //Dynamic tool crafting
                 if (!success.get())
                 {
                     int headSlot = h.findStack(p -> p.getItem() instanceof ToolHead);
-                    if (headSlot < 0)
-                        return;
 
                     int bindSlot = h.findStack(p -> p.getItem() instanceof ToolPart && ((ToolPart) (p.getItem())).getPartType().equals(PartType.BINDING));
-                    if (bindSlot < 0)
-                        return;
 
                     int handSlot = h.findStack(p -> p.getItem() instanceof ToolPart && ((ToolPart) (p.getItem())).getPartType().equals(PartType.HANDLE));
-                    if (handSlot < 0)
-                        return;
 
-                    //Slots should be valid - assemble tool
-                    Item tool = Items.AIR;
-                    ToolType toolType = ((ToolHead) (h.getStackInSlot(headSlot).getItem())).getToolType();
-
-                    if (toolType.equals(ToolType.PICKAXE))
-                        tool = ModItems.DYNAMIC_PICKAXE.get();
-                    else if (toolType.equals(ToolType.SHOVEL))
-                        tool = ModItems.DYNAMIC_SHOVEL.get();
-
-                    ItemStack craftedStack = new ItemStack(tool);
-                    DynamicTool.initialiseStack(craftedStack);
-                    DynamicTool.setMaterials(craftedStack, ToolPart.getMaterial(h.getStackInSlot(headSlot)), ToolPart.getMaterial(h.getStackInSlot(bindSlot)), ToolPart.getMaterial(h.getStackInSlot(handSlot)));
-
-                    for (ItemStack stack : h.getStacks())
+                    if (headSlot > 0 && bindSlot > 0 && handSlot > 0)
                     {
-                        stack.setCount(stack.getCount() - 1);
-                    }
+                        //Slots should be valid - assemble tool
+                        Item tool = Items.AIR;
+                        ToolType toolType = ((ToolHead) (h.getStackInSlot(headSlot).getItem())).getToolType();
 
-                    outputHandler.setStackInSlot(0, craftedStack);
-                    tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
-                    success.set(true);
+                        if (toolType.equals(ToolType.PICKAXE))
+                            tool = ModItems.DYNAMIC_PICKAXE.get();
+                        else if (toolType.equals(ToolType.SHOVEL))
+                            tool = ModItems.DYNAMIC_SHOVEL.get();
+
+                        ItemStack craftedStack = new ItemStack(tool);
+                        DynamicTool.initialiseStack(craftedStack);
+                        DynamicTool.setMaterials(craftedStack, ToolPart.getMaterial(h.getStackInSlot(headSlot)), ToolPart.getMaterial(h.getStackInSlot(bindSlot)), ToolPart.getMaterial(h.getStackInSlot(handSlot)));
+
+                        for (ItemStack stack : h.getStacks())
+                        {
+                            stack.setCount(stack.getCount() - 1);
+                        }
+
+                        outputHandler.setStackInSlot(0, craftedStack);
+                        tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
+                        success.set(true);
+                    }
                 }
 
+                // Dynamic tool repairing
+                if (!success.get())
+                {
+                    int toolSlot = h.findStack(p -> p.getItem() instanceof DynamicTool);
+                    ItemStack toolStack = h.getStackInSlot(toolSlot);
+                    Material repairMat = DynamicTool.getHeadMat(toolStack);
+                    List<Integer> slots = new ArrayList<>();
+                    for (int i = 0; i < h.getSlots(); i++)
+                    {
+                        if (MaterialManager.getRecipeResult(h.getStackInSlot(i).getItem()).equals(repairMat))
+                            slots.add(i);
+                    }
+
+                    if (slots.size() > 0)
+                    {
+                        ItemStack stackOut = toolStack.copy();
+
+                        for (Integer i : slots)
+                        {
+                            DynamicTool.repairStack(stackOut, 100);
+                            ItemStack repair = h.getStackInSlot(i);
+                            repair.setCount(repair.getCount() - 1);
+                        }
+
+                        toolStack.setCount(0);
+                        outputHandler.setStackInSlot(0, stackOut);
+                        tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
+                        success.set(true);
+                    }
+                }
             }
         });
 

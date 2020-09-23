@@ -231,6 +231,11 @@ public class DynamicTool extends ToolItem
         return MaterialManager.getRecipeResult(repair.getItem()) != Material.DEFAULT;
     }
 
+    public static void repairStack(ItemStack stack, int amount)
+    {
+        stack.setDamage(stack.getDamage() - amount);
+    }
+
     public static String[] getMatTextures(ItemStack stack)
     {
         String[] stringsOut = new String[3];
