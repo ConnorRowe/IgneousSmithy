@@ -38,11 +38,13 @@ public class DynamicTool extends ToolItem
     private static final String NBT_BROKEN = "broken";
 
     public ToolType toolType;
+    private final NonNullList<ToolLayer> layers;
 
-    public DynamicTool(ToolType toolType)
+    public DynamicTool(ToolType toolType, ToolLayer... layers)
     {
         super(1, -2.8f, ItemTier.WOOD, toolType.effectiveBlocks, new Properties().group(IgneousSmithy.IgneousGroup.instance));
         this.toolType = toolType;
+        this.layers = NonNullList.from(new ToolLayer("", null), layers);
     }
 
     @Override
@@ -137,6 +139,20 @@ public class DynamicTool extends ToolItem
     public static Material getHandMat(ItemStack stack)
     {
         return getMaterial(stack, 0);
+    }
+
+    public static NonNullList<ToolLayer> getLayers(ItemStack stack)
+    {
+        if(stack.getItem() instanceof DynamicTool)
+        {
+            return ((DynamicTool)stack.getItem()).getLayers();
+        } else
+            return NonNullList.create();
+    }
+
+    public NonNullList<ToolLayer> getLayers()
+    {
+        return this.layers;
     }
 
     public static boolean getBroken(ItemStack stack)

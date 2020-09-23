@@ -1,6 +1,7 @@
 {
   "name": "Stone",
   "colour": "828282",
+  "apply_colour": true,
   "texture": "dull",
   "rarity": 1,
   "attack_damage": 1.0,

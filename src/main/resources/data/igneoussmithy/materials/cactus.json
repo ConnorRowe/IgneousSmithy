@@ -1,6 +1,7 @@
 {
   "name": "Cactus",
   "colour": "ffffff",
+  "apply_colour": false,
   "texture": "cactus",
   "rarity": 1,
   "attack_damage": 6.0,

@@ -1,6 +1,7 @@
 {
   "name": "Iron",
   "colour": "F8F8FF",
+  "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
   "attack_damage": 2.0,

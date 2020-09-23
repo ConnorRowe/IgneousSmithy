@@ -25,6 +25,7 @@ public class Material
         this.packName = "";
         this.name = new StringTextComponent("DEFAULT");
         this.colour = 0xFF00FF;
+        this.applyColour = true;
         this.rarity = 0;
         this.harvestLevel = 0;
         this.durability = 0;
@@ -35,6 +36,7 @@ public class Material
 
     public ITextComponent name;
     public int colour;
+    public boolean applyColour;
     public int rarity;
     public int harvestLevel;
     public int durability;
@@ -60,6 +62,7 @@ public class Material
         this.packName = packName;
         this.name = ITextComponent.Serializer.func_240641_a_(getPrimitiveElement("name", json));
         this.colour = Integer.parseInt(getPrimitiveElement("colour", json).getAsString(), 16);
+        this.applyColour = getPrimitiveElement("apply_colour", json).getAsBoolean();
         this.rarity = getPrimitiveElement("rarity", json).getAsInt();
         this.harvestLevel = getPrimitiveElement("harvest_level", json).getAsInt();
         this.durability = getPrimitiveElement("durability", json).getAsInt();

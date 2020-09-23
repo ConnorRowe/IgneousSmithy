@@ -1,6 +1,7 @@
 {
   "name": "Netherite",
   "colour": "886280",
+  "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
   "attack_damage": 4.0,

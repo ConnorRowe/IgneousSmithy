@@ -1,6 +1,7 @@
 {
   "name": "Orange",
   "colour": "FF4500",
+  "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
   "attack_damage": 3.0,

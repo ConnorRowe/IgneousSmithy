@@ -3,11 +3,13 @@ package com.connorrowe.igneoussmithy.client.model;
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.items.DynamicTool;
 import com.connorrowe.igneoussmithy.items.Material;
+import com.connorrowe.igneoussmithy.items.ToolLayer;
 import com.connorrowe.igneoussmithy.items.ToolType;
 import com.connorrowe.igneoussmithy.tools.ColourHelper;
 import com.connorrowe.igneoussmithy.tools.ModelHelper;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +23,11 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Set;
 import java.util.function.Function;
 
 // The whole model baking system is modified from Culinary Construct https://github.com/TheIllusiveC4/CulinaryConstruct
@@ -43,7 +49,7 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                 owner.getCameraTransforms());
     }
 
-    public IBakedModel bake(boolean broken, List<Integer> matColours, String[] textures, ToolType toolType,
+    public IBakedModel bake(boolean broken, NonNullList<ToolLayer> layers, NonNullList<Material> materials, ToolType toolType,
                             IModelConfiguration owner, ModelBakery bakery,
                             Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
                             ItemOverrideList overrides)
@@ -57,22 +63,34 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                         new ResourceLocation(IgneousSmithy.MODID, "item/tool/broken"));
         TextureAtlasSprite particleSprite = model.getParticleTexture(EmptyModelData.INSTANCE);
 
-        for (int i = 0; i < 3; i++)
+        for (ToolLayer layer : layers)
         {
-            String texName;
-            if (i == 0)
-                texName = "handle";
-            else if (i == 1)
-                texName = toolType.name + "_bind";
-            else texName = toolType.name + "_head";
+            boolean fallBack = false;
 
-            texName += "_" + textures[i];
 
-            IBakedModel ingredientModel = ModelHelper
-                    .getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides,
-                            new ResourceLocation(IgneousSmithy.MODID, "item/tool/" + texName));
-            ColourHelper.colorQuads(ingredientModel, i < matColours.size() ? matColours.get(i) : 0x000000, random, builder);
-            particleSprite = ingredientModel.getParticleTexture(EmptyModelData.INSTANCE);
+            String texName = layer.baseTexture;
+
+            // test if texture exists
+            try
+            {
+                Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(IgneousSmithy.MODID, "textures/item/tool/" + texName + "_" + materials.get(layer.materialIndex).texture + ".png"));
+                if (layer.materialIndex != null)
+                    texName += "_" + materials.get(layer.materialIndex).texture;
+
+            } catch (IOException e)
+            {
+                // fallback to dull texture
+                texName += "_dull";
+                fallBack = true;
+            }
+
+            IBakedModel layerModel = ModelHelper.getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides,
+                    new ResourceLocation(IgneousSmithy.MODID, "item/tool/" + texName));
+
+            if (layer.materialIndex != null && (materials.get(layer.materialIndex).applyColour || fallBack))
+                ColourHelper.colorQuads(layerModel, materials.get(layer.materialIndex).colour, random, builder);
+            else
+                builder.addAll(layerModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
         }
 
         if (broken)
@@ -114,13 +132,8 @@ public final class ToolModel implements IModelGeometry<ToolModel>
             System.out.println("getBakedModel: " + DynamicTool.getHeadMat(stack).name.getString() + DynamicTool.getToolType(stack).name);
 
             boolean isBroken = DynamicTool.getBroken(stack);
-            String[] textures = DynamicTool.getMatTextures(stack);
 
-            List<Integer> matColours = new ArrayList<>();
-            NonNullList<Material> materials = DynamicTool.getMaterials(stack);
-            materials.forEach(material -> matColours.add(material.colour));
-
-            return this.model.bake(isBroken, matColours, textures, DynamicTool.getToolType(stack), this.owner, this.bakery, this.spriteGetter,
+            return this.model.bake(isBroken, DynamicTool.getLayers(stack), DynamicTool.getMaterials(stack), DynamicTool.getToolType(stack), this.owner, this.bakery, this.spriteGetter,
                     this.modelTransform, ItemOverrideList.EMPTY);
         }
     }

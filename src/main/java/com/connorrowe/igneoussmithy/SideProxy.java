@@ -102,7 +102,7 @@ class SideProxy implements IProxy
             AtlasTexture map = evt.getMap();
 
             // For a new "texture" to be used in the material data JSONs, it has to be added here first
-            String[] knownMaterialTextures = new String[]{"shiny", "dull", "cactus"};
+            String[] knownMaterialTextures = new String[]{"shiny", "dull", "cactus", "bone"};
 
             if (map.getTextureLocation() == PlayerContainer.LOCATION_BLOCKS_TEXTURE)
             {

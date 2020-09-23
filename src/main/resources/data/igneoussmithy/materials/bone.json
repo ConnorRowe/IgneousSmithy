@@ -1,0 +1,23 @@
+{
+  "name": "Bone",
+  "colour": "e8e5d2",
+  "apply_colour": false,
+  "texture": "bone",
+  "rarity": 1,
+  "attack_damage": 6.0,
+  "harvest_level": 2,
+  "durability": 144,
+  "efficiency": 3.0,
+  "enchantability": 20,
+  "binding": {
+    "multiplier": 1.1,
+    "durability": 0
+  },
+  "repair_item": "minecraft:bone",
+  "traits": {
+    "all": [
+    ],
+    "head_only": [
+    ]
+  }
+}

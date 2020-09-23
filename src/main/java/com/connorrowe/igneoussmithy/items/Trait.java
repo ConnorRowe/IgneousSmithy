@@ -44,7 +44,7 @@ public class Trait
 
         create("mending", "Mending", TraitEvent.inventoryTick, 0x556B2F, (stack, player, other, world) ->
         {
-            float baseHealRate = .002f;
+            float baseHealRate = .001f;
             if (world != null && world.isRaining())
                 baseHealRate *= 2;
 

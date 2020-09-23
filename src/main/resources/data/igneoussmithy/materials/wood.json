@@ -1,6 +1,7 @@
 {
   "name": "Wood",
   "colour": "8b692e",
+  "apply_colour": true,
   "texture": "dull",
   "rarity": 1,
   "attack_damage": 0.0,

@@ -9,6 +9,7 @@ import com.connorrowe.igneoussmithy.tools.ColourHelper;
 import com.connorrowe.igneoussmithy.tools.ModelHelper;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +22,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
@@ -53,7 +55,7 @@ public final class PartModel implements IModelGeometry<PartModel>
 
         Random random = new Random();
         random.setSeed(42);
-
+        boolean fallBack = false;
         String texName = "";
 
         if (partType == PartType.HEAD)
@@ -68,8 +70,17 @@ public final class PartModel implements IModelGeometry<PartModel>
         else if (partType == PartType.HANDLE)
             texName = "item/tool/handle";
 
-        texName += "_" + material.texture;
-
+        // test if texture exists
+        try
+        {
+            Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(IgneousSmithy.MODID,  "textures/" + texName + "_" + material.texture + ".png"));
+            texName += "_" + material.texture;
+        } catch (IOException e)
+        {
+            // fallback to dull texture
+            texName += "_dull";
+            fallBack = true;
+        }
 
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         IBakedModel model = ModelHelper
@@ -77,7 +88,10 @@ public final class PartModel implements IModelGeometry<PartModel>
                         new ResourceLocation(IgneousSmithy.MODID, texName));
 
         builder.addAll(model.getQuads(null, null, random, EmptyModelData.INSTANCE));
-        ColourHelper.colorQuads(model, material.colour, random, builder);
+
+        if(material.applyColour || fallBack)
+            ColourHelper.colorQuads(model, material.colour, random, builder);
+
         TextureAtlasSprite particleSprite = model.getParticleTexture(EmptyModelData.INSTANCE);
 
         return new PerspectiveItemModel(builder.build(), particleSprite,
