@@ -31,7 +31,6 @@ public class Material
         this.durability = 0;
         this.attackDamage = 0;
         this.efficiency = 0;
-
     }
 
     public ITextComponent name;
@@ -45,7 +44,8 @@ public class Material
     public String texture;
     public float bindingMultiplier;
     public int bindingDurability;
-    public Item repairItem;
+    public List<Item> repairItems;
+    public List<ResourceLocation> repairTags;
     public List<Trait> headOnlyTraits;
     public List<Trait> allTraits;
     private ResourceLocation materialId;
@@ -70,7 +70,12 @@ public class Material
         this.efficiency = getPrimitiveElement("efficiency", json).getAsFloat();
         this.texture = getPrimitiveElement("texture", json).getAsString();
         this.getBindingStats(json);
-        this.repairItem = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryCreate(getPrimitiveElement("repair_item", json).getAsString()));
+
+        // Repair stuff is used to craft parts - probably should rename
+        this.repairItems = new ArrayList<>();
+        this.repairTags = new ArrayList<>();
+        this.getRepairables(json);
+
         this.headOnlyTraits = new ArrayList<>();
         this.allTraits = new ArrayList<>();
         this.getTraits(json);
@@ -96,6 +101,31 @@ public class Material
         for (JsonElement e : headOnly)
         {
             this.headOnlyTraits.add(Trait.get(e.getAsString()));
+        }
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private void getRepairables(JsonObject json)
+    {
+        JsonArray repair = getJsonArray("repair", json);
+
+        for (JsonElement e : repair)
+        {
+            if (e.getAsJsonObject() == null)
+                break;
+
+            JsonObject o = e.getAsJsonObject();
+
+            // Get all item entries
+            if (o.has("item"))
+            {
+                this.repairItems.add(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryCreate(
+                        o.getAsJsonPrimitive("item").getAsString())));
+
+            } else if (o.has("tag")) // Get all tag entries
+            {
+                this.repairTags.add(ResourceLocation.tryCreate(o.getAsJsonPrimitive("tag").getAsString()));
+            }
         }
     }
 

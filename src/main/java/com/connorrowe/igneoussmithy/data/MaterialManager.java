@@ -10,6 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;
@@ -27,7 +29,6 @@ public class MaterialManager implements IResourceManagerReloadListener
     private static final Gson GSON = (new GsonBuilder()).disableHtmlEscaping().create();
     private static final String DATA_PATH = "materials";
     private static final Map<ResourceLocation, Material> MAP = Collections.synchronizedMap(new LinkedHashMap<>());
-    private static final Map<Item, ResourceLocation> RECIPES = Collections.synchronizedMap(new LinkedHashMap<>());
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager)
@@ -35,8 +36,6 @@ public class MaterialManager implements IResourceManagerReloadListener
         Collection<ResourceLocation> resources = resourceManager.getAllResourceLocations(DATA_PATH, s -> s.endsWith(".json"));
         if (resources.isEmpty())
             return;
-
-        RECIPES.clear();
 
         synchronized (MAP)
         {
@@ -61,7 +60,6 @@ public class MaterialManager implements IResourceManagerReloadListener
                         Material newMat = new Material();
                         newMat.deserialize(id, packName, json, resourceManager);
                         MAP.put(newMat.getId(), newMat);
-                        RECIPES.put(newMat.repairItem, newMat.getId());
                     }
                 } catch (IllegalArgumentException | JsonParseException ex)
                 {
@@ -96,12 +94,38 @@ public class MaterialManager implements IResourceManagerReloadListener
     @Nullable
     public static Material getRecipeResult(Item reagent)
     {
-        synchronized (RECIPES)
+        Material matOut = Material.DEFAULT;
+
+        synchronized (MAP)
         {
-            synchronized (MAP)
+            for (ResourceLocation r : MAP.keySet())
             {
-                return MAP.get(RECIPES.get(reagent));
+                for (Item i : MAP.get(r).repairItems)
+                {
+                    if (i.equals(reagent))
+                    {
+                        matOut = MAP.get(r);
+                        break;
+                    }
+                }
+                if (!matOut.equals(Material.DEFAULT))
+                    break;
+
+                for (ResourceLocation t : MAP.get(r).repairTags)
+                {
+                    ITag<Item> tag = ItemTags.getCollection().get(t);
+                    if (tag != null)
+                    {
+                        if (tag.contains(reagent))
+                        {
+                            matOut = MAP.get(r);
+                            break;
+                        }
+                    }
+                }
             }
         }
+
+        return matOut;
     }
 }

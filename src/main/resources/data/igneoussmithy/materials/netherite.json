@@ -13,7 +13,11 @@
     "multiplier": 1.4,
     "durability": 100
   },
-  "repair_item": "minecraft:netherite_ingot",
+  "repair": [
+    {
+      "tag": "forge:ingots/netherite"
+    }
+  ],
   "traits": {
     "all": [
     ],

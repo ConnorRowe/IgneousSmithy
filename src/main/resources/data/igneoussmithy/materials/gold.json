@@ -13,7 +13,11 @@
     "multiplier": 1.4,
     "durability": -200
   },
-  "repair_item": "minecraft:gold_ingot",
+  "repair": [
+    {
+      "tag": "forge:ingots/gold"
+    }
+  ],
   "traits": {
     "all": [
       "malleable"

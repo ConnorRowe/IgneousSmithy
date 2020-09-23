@@ -13,7 +13,11 @@
     "multiplier": 0.5,
     "durability": 0
   },
-  "repair_item": "minecraft:cactus",
+  "repair": [
+    {
+      "item": "minecraft:cactus"
+    }
+  ],
   "traits": {
     "all": [
     ],

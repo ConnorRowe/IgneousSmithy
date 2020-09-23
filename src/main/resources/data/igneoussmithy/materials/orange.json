@@ -13,7 +13,11 @@
     "multiplier": 1.0,
     "durability": -69
   },
-  "repair_item": "minecraft:orange_dye",
+  "repair": [
+    {
+      "tag": "forge:dyes/orange"
+    }
+  ],
   "traits": {
     "all": [
     ],

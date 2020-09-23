@@ -13,7 +13,11 @@
     "multiplier": 1.1,
     "durability": 50
   },
-  "repair_item": "minecraft:iron_ingot",
+  "repair": [
+    {
+      "tag": "forge:ingots/iron"
+    }
+  ],
   "traits": {
     "all": [
     ],

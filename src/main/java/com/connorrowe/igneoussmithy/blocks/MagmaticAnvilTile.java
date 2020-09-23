@@ -153,7 +153,7 @@ public class MagmaticAnvilTile extends TileEntity
                     {
                         Material mat = MaterialManager.getRecipeResult(h.getStackInSlot(i).getItem());
                         List<Integer> slots = h.containsMultiple(h.getStackInSlot(i).getItem(), diagram.materialCost);
-                        if (slots != null && mat != null)
+                        if (slots != null && mat != null && mat != Material.DEFAULT)
                         {
                             ItemStack craftStack = diagram.craft(mat);
 

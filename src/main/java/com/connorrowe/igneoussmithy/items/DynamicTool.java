@@ -143,9 +143,9 @@ public class DynamicTool extends ToolItem
 
     public static NonNullList<ToolLayer> getLayers(ItemStack stack)
     {
-        if(stack.getItem() instanceof DynamicTool)
+        if (stack.getItem() instanceof DynamicTool)
         {
-            return ((DynamicTool)stack.getItem()).getLayers();
+            return ((DynamicTool) stack.getItem()).getLayers();
         } else
             return NonNullList.create();
     }
@@ -228,7 +228,7 @@ public class DynamicTool extends ToolItem
     @Override
     public boolean getIsRepairable(@Nonnull ItemStack toRepair, ItemStack repair)
     {
-        return getHeadMat(toRepair).repairItem.equals(repair.getItem());
+        return MaterialManager.getRecipeResult(repair.getItem()) != Material.DEFAULT;
     }
 
     public static String[] getMatTextures(ItemStack stack)

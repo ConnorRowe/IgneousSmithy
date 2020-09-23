@@ -13,7 +13,14 @@
     "multiplier": 0.4,
     "durability": -50
   },
-  "repair_item": "minecraft:cobblestone",
+  "repair": [
+    {
+      "tag": "minecraft:base_stone_overworld"
+    },
+    {
+      "tag": "forge:cobblestone"
+    }
+  ],
   "traits": {
     "all": [
     ],

@@ -13,7 +13,11 @@
     "multiplier": 1.1,
     "durability": 0
   },
-  "repair_item": "minecraft:bone",
+  "repair": [
+    {
+      "item": "minecraft:bone"
+    }
+  ],
   "traits": {
     "all": [
     ],
