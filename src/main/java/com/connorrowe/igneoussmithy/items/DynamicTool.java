@@ -2,6 +2,7 @@ package com.connorrowe.igneoussmithy.items;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.data.MaterialManager;
+import com.connorrowe.igneoussmithy.tools.IgneousUtils;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
@@ -19,7 +20,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
-import org.codehaus.plexus.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -288,7 +288,7 @@ public class DynamicTool extends ToolItem
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getHeadMat(stack).name.getString() + " " + StringUtils.capitalizeFirstLetter(toolType.name));
+        return new StringTextComponent(getHeadMat(stack).name.getString() + " " + IgneousUtils.CapitaliseString(toolType.name));
     }
 
     @Override

@@ -32,3 +32,4 @@ changelog.txt
 .assets
 logs
 src/generated/resources/.cache/
+publish

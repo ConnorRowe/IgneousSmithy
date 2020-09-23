@@ -1,11 +1,11 @@
 package com.connorrowe.igneoussmithy.items;
 
+import com.connorrowe.igneoussmithy.tools.IgneousUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import org.codehaus.plexus.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ public class ToolHead extends ToolPart
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getMaterial(stack).name.getString() + " " + StringUtils.capitalizeFirstLetter(toolType.name) + " Head");
+        return new StringTextComponent(getMaterial(stack).name.getString() + " " + IgneousUtils.CapitaliseString(toolType.name) + " Head");
     }
 
     @Override

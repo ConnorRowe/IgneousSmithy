@@ -181,7 +181,7 @@ public class MagmaticAnvilTile extends TileEntity
 
                     int handSlot = h.findStack(p -> p.getItem() instanceof ToolPart && ((ToolPart) (p.getItem())).getPartType().equals(PartType.HANDLE));
 
-                    if (headSlot > 0 && bindSlot > 0 && handSlot > 0)
+                    if (headSlot >= 0 && bindSlot >= 0 && handSlot >= 0)
                     {
                         //Slots should be valid - assemble tool
                         Item tool = Items.AIR;
@@ -211,30 +211,33 @@ public class MagmaticAnvilTile extends TileEntity
                 if (!success.get())
                 {
                     int toolSlot = h.findStack(p -> p.getItem() instanceof DynamicTool);
-                    ItemStack toolStack = h.getStackInSlot(toolSlot);
-                    Material repairMat = DynamicTool.getHeadMat(toolStack);
-                    List<Integer> slots = new ArrayList<>();
-                    for (int i = 0; i < h.getSlots(); i++)
+                    if(toolSlot >= 0)
                     {
-                        if (MaterialManager.getRecipeResult(h.getStackInSlot(i).getItem()).equals(repairMat))
-                            slots.add(i);
-                    }
-
-                    if (slots.size() > 0)
-                    {
-                        ItemStack stackOut = toolStack.copy();
-
-                        for (Integer i : slots)
+                        ItemStack toolStack = h.getStackInSlot(toolSlot);
+                        Material repairMat = DynamicTool.getHeadMat(toolStack);
+                        List<Integer> slots = new ArrayList<>();
+                        for (int i = 0; i < h.getSlots(); i++)
                         {
-                            DynamicTool.repairStack(stackOut, 100);
-                            ItemStack repair = h.getStackInSlot(i);
-                            repair.setCount(repair.getCount() - 1);
+                            if (MaterialManager.getRecipeResult(h.getStackInSlot(i).getItem()).equals(repairMat))
+                                slots.add(i);
                         }
 
-                        toolStack.setCount(0);
-                        outputHandler.setStackInSlot(0, stackOut);
-                        tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
-                        success.set(true);
+                        if (slots.size() > 0)
+                        {
+                            ItemStack stackOut = toolStack.copy();
+
+                            for (Integer i : slots)
+                            {
+                                DynamicTool.repairStack(stackOut, 100);
+                                ItemStack repair = h.getStackInSlot(i);
+                                repair.setCount(repair.getCount() - 1);
+                            }
+
+                            toolStack.setCount(0);
+                            outputHandler.setStackInSlot(0, stackOut);
+                            tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
+                            success.set(true);
+                        }
                     }
                 }
             }
