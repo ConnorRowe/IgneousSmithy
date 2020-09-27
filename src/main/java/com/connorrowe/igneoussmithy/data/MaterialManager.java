@@ -27,7 +27,7 @@ public class MaterialManager implements IResourceManagerReloadListener
     public static final MaterialManager INSTANCE = new MaterialManager();
 
     private static final Gson GSON = (new GsonBuilder()).disableHtmlEscaping().create();
-    private static final String DATA_PATH = "materials";
+    private static final String DATA_PATH = "igneous_materials";
     private static final Map<ResourceLocation, Material> MAP = Collections.synchronizedMap(new LinkedHashMap<>());
 
     @Override

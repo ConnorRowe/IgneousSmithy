@@ -1,0 +1,14 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ore"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "minecraft:nether_star"
+  }
+}

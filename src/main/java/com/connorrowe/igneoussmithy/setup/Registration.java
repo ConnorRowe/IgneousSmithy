@@ -4,6 +4,7 @@ import com.connorrowe.igneoussmithy.IgneousSmithy;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -21,6 +22,7 @@ public class Registration
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, IgneousSmithy.MODID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, IgneousSmithy.MODID);
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, IgneousSmithy.MODID);
+    public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, IgneousSmithy.MODID);
 
     private Registration()
     {
@@ -33,10 +35,12 @@ public class Registration
         CONTAINERS.register(modEventBus);
         ITEMS.register(modEventBus);
         TILE_ENTITIES.register(modEventBus);
+        RECIPE_SERIALIZERS.register(modEventBus);
 
         ModBlocks.register();
         ModItems.register();
         ModTileEntities.register();
+        ModRecipeSerializers.register();
     }
 
     @SuppressWarnings("unchecked")

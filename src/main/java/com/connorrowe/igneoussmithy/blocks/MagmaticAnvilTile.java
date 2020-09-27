@@ -2,13 +2,20 @@ package com.connorrowe.igneoussmithy.blocks;
 
 import com.connorrowe.igneoussmithy.data.MaterialManager;
 import com.connorrowe.igneoussmithy.items.*;
+import com.connorrowe.igneoussmithy.recipes.AnvilRecipe;
 import com.connorrowe.igneoussmithy.setup.ModItems;
+import com.connorrowe.igneoussmithy.setup.ModRecipeSerializers;
 import com.connorrowe.igneoussmithy.setup.ModTileEntities;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -16,6 +23,9 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,13 +33,14 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MagmaticAnvilTile extends TileEntity
 {
@@ -211,7 +222,7 @@ public class MagmaticAnvilTile extends TileEntity
                 if (!success.get())
                 {
                     int toolSlot = h.findStack(p -> p.getItem() instanceof DynamicTool);
-                    if(toolSlot >= 0)
+                    if (toolSlot >= 0)
                     {
                         ItemStack toolStack = h.getStackInSlot(toolSlot);
                         Material repairMat = DynamicTool.getHeadMat(toolStack);
@@ -240,10 +251,81 @@ public class MagmaticAnvilTile extends TileEntity
                         }
                     }
                 }
+
+                if (!success.get())
+                {
+                    AnvilRecipe recipe = this.getRecipe();
+
+                    if (recipe != null)
+                    {
+                        for (Ingredient i : recipe.getIngredients())
+                        {
+                            for (ItemStack stack : i.getMatchingStacks())
+                            {
+                                for (ItemStack reagent : reagentHandler.getStacks())
+                                {
+                                    if (reagent.isItemEqual(stack))
+                                    {
+                                        reagent.setCount(reagent.getCount() - 1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        outputHandler.setStackInSlot(0, recipe.getRecipeOutput());
+                        tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
+                        success.set(true);
+                    }
+                }
             }
         });
 
         return success.get();
+    }
+
+    private AnvilRecipe getRecipe()
+    {
+        Set<IRecipe<?>> recipes = findRecipesByType(ModRecipeSerializers.ANVIL_TYPE, this.world);
+        for (IRecipe<?> iRecipe : recipes)
+        {
+            AnvilRecipe recipe = (AnvilRecipe) iRecipe;
+            if (recipe.matches(new RecipeWrapper(this.reagentHandler), this.world))
+                return recipe;
+        }
+
+        return null;
+    }
+
+    public static Set<IRecipe<?>> findRecipesByType(IRecipeType<?> recipeType, World world)
+    {
+        return world != null ? world.getRecipeManager().getRecipes().stream().filter(r -> r.getType() == recipeType).collect(Collectors.toSet()) : Collections.emptySet();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static Set<IRecipe<?>> findRecipesByType(IRecipeType<?> recipeType)
+    {
+        ClientWorld world = Minecraft.getInstance().world;
+        return world != null ? world.getRecipeManager().getRecipes().stream().filter(r -> r.getType() == recipeType).collect(Collectors.toSet()) : Collections.emptySet();
+    }
+
+    public static Set<ItemStack> getAllRecipeInputs(IRecipeType<?> recipeType, World world)
+    {
+        Set<ItemStack> inputs = new HashSet<>();
+        Set<IRecipe<?>> recipes = findRecipesByType(recipeType, world);
+        for (IRecipe<?> iRecipe : recipes)
+        {
+            NonNullList<Ingredient> ingredients = iRecipe.getIngredients();
+            ingredients.forEach(i ->
+            {
+                for (ItemStack stack : i.getMatchingStacks())
+                {
+                    inputs.add(stack);
+                }
+            });
+        }
+
+        return inputs;
     }
 
     // Updates client on load
