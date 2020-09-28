@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
@@ -36,6 +37,7 @@ public class DynamicTool extends ToolItem
     private static final String NBT_MATERIAL_PATH = "mat_path";
     private static final String NBT_MAT_RESOURCE_LOCATIONS = "mat_res_locs";
     private static final String NBT_BROKEN = "broken";
+    private static final String NBT_MODIFIERS = "modifiers";
 
     public ToolType toolType;
     private final NonNullList<ToolLayer> layers;
@@ -66,6 +68,7 @@ public class DynamicTool extends ToolItem
         CompoundNBT compound = stack.getOrCreateTag();
 
         compound.putBoolean(NBT_BROKEN, false);
+        compound.put(NBT_MODIFIERS, new ListNBT());
     }
 
     public static void setMaterials(ItemStack stack, Material headMaterial, Material bindMaterial, Material handleMaterial)
@@ -99,6 +102,43 @@ public class DynamicTool extends ToolItem
         }
 
         stack.getOrCreateTag().put(NBT_MAT_RESOURCE_LOCATIONS, matResourceLocsNBT);
+    }
+
+    public static void addModifier(ItemStack stack, Modifier modifier)
+    {
+        if (!stack.getOrCreateTag().contains(NBT_MODIFIERS))
+            stack.getOrCreateTag().put(NBT_MODIFIERS, new ListNBT());
+
+        ListNBT modifiers = stack.getOrCreateTag().getList(NBT_MODIFIERS, 10);
+        CompoundNBT compound = new CompoundNBT();
+        compound.putString("name", modifier.name);
+
+        modifiers.add(compound);
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving)
+    {
+        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, entityLiving, null, worldIn));
+
+        return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+    }
+
+    public static NonNullList<Modifier> getModifiers(ItemStack stack)
+    {
+        if (!stack.getOrCreateTag().contains(NBT_MODIFIERS))
+            stack.getOrCreateTag().put(NBT_MODIFIERS, new ListNBT());
+
+        ListNBT modifiers = stack.getOrCreateTag().getList(NBT_MODIFIERS, 10);
+        NonNullList<Modifier> modifiersOut = NonNullList.withSize(modifiers.size(), Modifier.NULL);
+
+        for (int i = 0; i < modifiers.size(); i++)
+        {
+            CompoundNBT modifier = modifiers.getCompound(i);
+            modifiersOut.set(i, Modifier.get(modifier.getString("name")));
+        }
+
+        return modifiersOut;
     }
 
     public static NonNullList<Material> getMaterials(ItemStack stack)
@@ -442,6 +482,14 @@ public class DynamicTool extends ToolItem
                 }
             });
         }
+
+        getModifiers(stack).forEach(m ->
+        {
+            if (!traits.contains(m.trait))
+            {
+                traits.add(m.trait);
+            }
+        });
 
         return traits;
     }

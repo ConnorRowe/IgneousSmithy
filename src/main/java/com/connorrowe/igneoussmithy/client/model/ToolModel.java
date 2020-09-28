@@ -1,10 +1,7 @@
 package com.connorrowe.igneoussmithy.client.model;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
-import com.connorrowe.igneoussmithy.items.DynamicTool;
-import com.connorrowe.igneoussmithy.items.Material;
-import com.connorrowe.igneoussmithy.items.ToolLayer;
-import com.connorrowe.igneoussmithy.items.ToolType;
+import com.connorrowe.igneoussmithy.items.*;
 import com.connorrowe.igneoussmithy.tools.ColourHelper;
 import com.connorrowe.igneoussmithy.tools.ModelHelper;
 import com.google.common.collect.ImmutableList;
@@ -49,7 +46,7 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                 owner.getCameraTransforms());
     }
 
-    public IBakedModel bake(boolean broken, NonNullList<ToolLayer> layers, NonNullList<Material> materials, ToolType toolType,
+    public IBakedModel bake(boolean broken, NonNullList<ToolLayer> layers, NonNullList<Material> materials, ToolType toolType, NonNullList<Modifier> modifiers,
                             IModelConfiguration owner, ModelBakery bakery,
                             Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
                             ItemOverrideList overrides)
@@ -93,6 +90,21 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                 builder.addAll(layerModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
         }
 
+        for (Modifier modifier : modifiers)
+        {
+            if (modifier.texture != null)
+            {
+                ResourceLocation tex = new ResourceLocation(modifier.texture.getNamespace(), "item/tool/" + toolType.name + "_" + modifier.texture.getPath());
+
+                IBakedModel modifierModel = ModelHelper.getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides, tex);
+
+                if (modifier.colour != 0xFFFFFF)
+                    ColourHelper.colorQuads(modifierModel, modifier.colour, random, builder);
+                else
+                    builder.addAll(modifierModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
+            }
+        }
+
         if (broken)
         {
             IBakedModel brokenModel = ModelHelper.getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides,
@@ -133,7 +145,7 @@ public final class ToolModel implements IModelGeometry<ToolModel>
 
             boolean isBroken = DynamicTool.getBroken(stack);
 
-            return this.model.bake(isBroken, DynamicTool.getLayers(stack), DynamicTool.getMaterials(stack), DynamicTool.getToolType(stack), this.owner, this.bakery, this.spriteGetter,
+            return this.model.bake(isBroken, DynamicTool.getLayers(stack), DynamicTool.getMaterials(stack), DynamicTool.getToolType(stack), DynamicTool.getModifiers(stack), this.owner, this.bakery, this.spriteGetter,
                     this.modelTransform, ItemOverrideList.EMPTY);
         }
     }

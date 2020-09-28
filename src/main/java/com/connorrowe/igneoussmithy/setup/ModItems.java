@@ -7,7 +7,7 @@ import net.minecraftforge.fml.RegistryObject;
 
 public class ModItems
 {
-    public static final RegistryObject<Item> BALL_PEEN_HAMMER = Registration.ITEMS.register("ball_peen_hammer", () -> new Item(partProps()));
+    public static final RegistryObject<Item> BALL_PEEN_HAMMER = Registration.ITEMS.register("ball_peen_hammer", () -> new Item(defProps()));
 
     public static final RegistryObject<ToolHead> PICKAXE_HEAD = Registration.ITEMS.register("pickaxe_head", () -> new ToolHead(ToolType.PICKAXE));
     public static final RegistryObject<ToolHead> SHOVEL_HEAD = Registration.ITEMS.register("shovel_head", () -> new ToolHead(ToolType.SHOVEL));
@@ -22,7 +22,9 @@ public class ModItems
     public static final RegistryObject<Diagram> DIAGRAM_BINDING = Registration.ITEMS.register("diagram_binding", () -> new Diagram(PartType.BINDING, BINDING, 1));
     public static final RegistryObject<Diagram> DIAGRAM_HANDLE = Registration.ITEMS.register("diagram_handle", () -> new Diagram(PartType.HANDLE, HANDLE, 2));
 
-    private static Item.Properties partProps()
+    public static final RegistryObject<ModifierItem> LUCKY_CHARM = Registration.ITEMS.register("lucky_charm", () -> new ModifierItem("lucky_charm"));
+
+    private static Item.Properties defProps()
     {
         return new Item.Properties().maxStackSize(1).group(IgneousSmithy.IgneousGroup.instance);
     }

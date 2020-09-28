@@ -1,0 +1,17 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "tag": "forge:storage_blocks/redstone"
+    },
+    {
+      "tag": "forge:storage_blocks/diamond"
+    },
+    {
+      "item": "minecraft:magma_cream"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:lucky_charm"
+  }
+}

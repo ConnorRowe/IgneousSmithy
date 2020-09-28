@@ -4,6 +4,7 @@ import com.connorrowe.igneoussmithy.client.MagmaticAnvilRenderer;
 import com.connorrowe.igneoussmithy.client.model.PartLoader;
 import com.connorrowe.igneoussmithy.client.model.ToolLoader;
 import com.connorrowe.igneoussmithy.data.MaterialManager;
+import com.connorrowe.igneoussmithy.items.Modifier;
 import com.connorrowe.igneoussmithy.items.Trait;
 import com.connorrowe.igneoussmithy.setup.ModTileEntities;
 import com.connorrowe.igneoussmithy.setup.Registration;
@@ -38,6 +39,7 @@ class SideProxy implements IProxy
         Registration.register();
         IgneousSmithy.IgneousGroup.load();
         Trait.register();
+        Modifier.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::imcEnqueue);
@@ -118,6 +120,7 @@ class SideProxy implements IProxy
 
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/broken"));
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "block/test"));
+                evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pickaxe_lucky_charm"));
             }
         }
 

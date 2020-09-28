@@ -252,6 +252,7 @@ public class MagmaticAnvilTile extends TileEntity
                     }
                 }
 
+                // Anvil recipe
                 if (!success.get())
                 {
                     AnvilRecipe recipe = this.getRecipe();
@@ -276,6 +277,35 @@ public class MagmaticAnvilTile extends TileEntity
                         outputHandler.setStackInSlot(0, recipe.getRecipeOutput());
                         tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
                         success.set(true);
+                    }
+                }
+
+                // Add modifier
+                if (!success.get())
+                {
+                    int toolSlot = h.findStack(s -> s.getItem() instanceof DynamicTool);
+                    int modifierSlot = h.findStack(s -> s.getItem() instanceof ModifierItem);
+
+                    if(toolSlot >= 0 && modifierSlot >= 0)
+                    {
+                        ItemStack modifierStack = h.getStackInSlot(modifierSlot);
+                        Modifier modifier = Modifier.get(((ModifierItem) modifierStack.getItem()).modifierName);
+
+                        if(modifier != null)
+                        {
+                            ItemStack toolStack = h.getStackInSlot(toolSlot).copy();
+                            if(!DynamicTool.getModifiers(toolStack).contains(modifier) && modifier.applicableTools.contains(((DynamicTool) toolStack.getItem()).toolType))
+                            {
+                                DynamicTool.addModifier(toolStack, modifier);
+
+                                h.getStackInSlot(modifierSlot).setCount(h.getStackInSlot(modifierSlot).getCount() - 1);
+                                h.extractItem(toolSlot, 1, false);
+
+                                outputHandler.setStackInSlot(0, toolStack);
+                                tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);
+                                success.set(true);
+                            }
+                        }
                     }
                 }
             }

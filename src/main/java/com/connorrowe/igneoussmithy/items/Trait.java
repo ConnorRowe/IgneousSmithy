@@ -1,6 +1,10 @@
 package com.connorrowe.igneoussmithy.items;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -51,6 +55,21 @@ public class Trait
             if (rand.nextFloat() < baseHealRate)
             {
                 stack.attemptDamageItem(-1, rand, null);
+            }
+
+            return true;
+        });
+
+        create("treasure", "Subterranean Treasure", TraitEvent.onBlockDestroyed, 0x191970, (stack, player, other, world) ->
+        {
+            ImmutableList<Item> possibleItems = ImmutableList.of(Items.COAL, Items.IRON_INGOT, Items.GOLD_NUGGET, Items.LAPIS_LAZULI, Items.REDSTONE);
+            float baseChance = 0.01f;
+            if (world != null)
+            {
+                if (rand.nextFloat() < baseChance)
+                {
+                    player.entityDropItem(possibleItems.get(randRange(0, possibleItems.size())));
+                }
             }
 
             return true;
@@ -138,5 +157,10 @@ public class Trait
 
             return traitEvent;
         }
+    }
+
+    private static int randRange(int min, int max)
+    {
+        return (int) ((rand.nextDouble() * (max - min)) + min);
     }
 }

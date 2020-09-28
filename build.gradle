@@ -17,9 +17,9 @@ repositories {
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
     }
-    maven { //GeckoLib
-        url 'https://repo.repsy.io/mvn/gandiber/geckolib'
-    }
+//    maven { //GeckoLib
+//        url 'https://repo.repsy.io/mvn/gandiber/geckolib'
+//    }
     maven { // TOP
         name 'tterrag maven'
         url "https://maven.tterrag.com/"
