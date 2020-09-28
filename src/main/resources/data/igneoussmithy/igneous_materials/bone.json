@@ -15,7 +15,7 @@
   },
   "repair": [
     {
-      "item": "minecraft:bone"
+      "tag": "forge:bones"
     }
   ],
   "traits": {

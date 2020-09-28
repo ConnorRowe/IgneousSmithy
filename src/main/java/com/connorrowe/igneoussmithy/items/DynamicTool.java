@@ -38,6 +38,7 @@ public class DynamicTool extends ToolItem
     private static final String NBT_MAT_RESOURCE_LOCATIONS = "mat_res_locs";
     private static final String NBT_BROKEN = "broken";
     private static final String NBT_MODIFIERS = "modifiers";
+    private static final String NBT_MAX_MODIFIERS = "max_modifiers";
 
     public ToolType toolType;
     private final NonNullList<ToolLayer> layers;
@@ -69,6 +70,7 @@ public class DynamicTool extends ToolItem
 
         compound.putBoolean(NBT_BROKEN, false);
         compound.put(NBT_MODIFIERS, new ListNBT());
+        compound.putInt(NBT_MAX_MODIFIERS, 3);
     }
 
     public static void setMaterials(ItemStack stack, Material headMaterial, Material bindMaterial, Material handleMaterial)
@@ -104,16 +106,26 @@ public class DynamicTool extends ToolItem
         stack.getOrCreateTag().put(NBT_MAT_RESOURCE_LOCATIONS, matResourceLocsNBT);
     }
 
-    public static void addModifier(ItemStack stack, Modifier modifier)
+    public static boolean addModifier(ItemStack stack, Modifier modifier)
     {
-        if (!stack.getOrCreateTag().contains(NBT_MODIFIERS))
-            stack.getOrCreateTag().put(NBT_MODIFIERS, new ListNBT());
+        boolean success = false;
 
-        ListNBT modifiers = stack.getOrCreateTag().getList(NBT_MODIFIERS, 10);
-        CompoundNBT compound = new CompoundNBT();
-        compound.putString("name", modifier.name);
+        CompoundNBT tag = stack.getOrCreateTag();
+        if (!tag.contains(NBT_MODIFIERS))
+            tag.put(NBT_MODIFIERS, new ListNBT());
 
-        modifiers.add(compound);
+        ListNBT modifiers = tag.getList(NBT_MODIFIERS, 10);
+
+        if (modifiers.size() < tag.getInt(NBT_MAX_MODIFIERS))
+        {
+            CompoundNBT compound = new CompoundNBT();
+            compound.putString("name", modifier.name);
+
+            modifiers.add(compound);
+            success = true;
+        }
+
+        return success;
     }
 
     @Override
