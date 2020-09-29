@@ -202,6 +202,10 @@ public class MagmaticAnvilTile extends TileEntity
                             tool = ModItems.DYNAMIC_PICKAXE.get();
                         else if (toolType.equals(ToolType.SHOVEL))
                             tool = ModItems.DYNAMIC_SHOVEL.get();
+                        else if (toolType.equals(ToolType.HATCHET))
+                            tool = ModItems.DYNAMIC_HATCHET.get();
+                        else if (toolType.equals(ToolType.SWORD))
+                            tool = ModItems.DYNAMIC_SWORD.get();
 
                         ItemStack craftedStack = new ItemStack(tool);
                         DynamicTool.initialiseStack(craftedStack);

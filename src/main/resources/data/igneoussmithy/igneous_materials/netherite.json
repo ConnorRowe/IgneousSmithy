@@ -4,7 +4,7 @@
   "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
-  "attack_damage": 4.0,
+  "attack_damage": 8.0,
   "harvest_level": 4,
   "durability": 2031,
   "efficiency": 9.0,

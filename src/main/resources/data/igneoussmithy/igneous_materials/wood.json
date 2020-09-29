@@ -4,7 +4,7 @@
   "apply_colour": true,
   "texture": "dull",
   "rarity": 1,
-  "attack_damage": 0.0,
+  "attack_damage": 4.0,
   "harvest_level": 0,
   "durability": 59,
   "efficiency": 2.0,

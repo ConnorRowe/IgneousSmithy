@@ -114,6 +114,11 @@ class SideProxy implements IProxy
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pickaxe_bind_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/shovel_head_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/shovel_bind_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/hatchet_head_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/hatchet_bind_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/sword_head_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/sword_bind_" + t));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/sword_handle_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/handle_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/part/binding_" + t));
                 }

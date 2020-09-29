@@ -16,6 +16,7 @@ import net.minecraft.item.ItemTier;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -62,6 +64,29 @@ public class DynamicTool extends ToolItem
             net.minecraft.block.material.Material material = blockIn.getMaterial();
             return material == net.minecraft.block.material.Material.ROCK || material == net.minecraft.block.material.Material.IRON || material == net.minecraft.block.material.Material.ANVIL;
         }
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker)
+    {
+        if (this.toolType.equals(ToolType.SWORD))
+        {
+            if (!getBroken(stack) && stack.getItem() instanceof DynamicTool && !attacker.world.isRemote)
+            {
+                getAllTraitsForEvent(stack, Trait.TraitEvent.hitEntity).forEach(t -> t.traitConsumer.execute(stack, attacker, target, attacker.world, 0));
+
+                AtomicReference<Float> damage = new AtomicReference<>(DynamicTool.getHeadMat(stack).attackDamage);
+
+                getAllTraitsForEvent(stack, Trait.TraitEvent.calcAttackDamage).forEach(t -> damage.set(t.traitConsumer.execute(stack, attacker, target, attacker.world, damage.get())));
+
+                if (attacker instanceof PlayerEntity)
+                    target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), damage.get());
+                else
+                    target.attackEntityFrom(DamageSource.GENERIC, damage.get());
+            }
+            return true;
+        } else
+            return super.hitEntity(stack, target, attacker);
     }
 
     public static void initialiseStack(ItemStack stack)
@@ -131,7 +156,7 @@ public class DynamicTool extends ToolItem
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving)
     {
-        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, entityLiving, null, worldIn));
+        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, entityLiving, null, worldIn, 0));
 
         return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
     }
@@ -253,7 +278,7 @@ public class DynamicTool extends ToolItem
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
         getAllTraitsForEvent(stack, Trait.TraitEvent.inventoryTick).forEach(t ->
-                t.traitConsumer.execute(stack, null, entityIn, worldIn));
+                t.traitConsumer.execute(stack, null, entityIn, worldIn, 0));
     }
 
     @Override
@@ -266,7 +291,7 @@ public class DynamicTool extends ToolItem
         }
 
         getAllTraitsForEvent(stack, Trait.TraitEvent.damageItem).forEach(t ->
-                t.traitConsumer.execute(stack, entity, null, null));
+                t.traitConsumer.execute(stack, entity, null, null, 0));
 
         return amount;
     }
@@ -308,7 +333,8 @@ public class DynamicTool extends ToolItem
         if (getBroken(stack))
             return 0.1f;
 
-        if (getToolTypes(stack).stream().anyMatch(state::isToolEffective)) return getHeadMat(stack).efficiency;
+        if (getToolTypes(stack).contains(state.getHarvestTool()) || state.getHarvestTool() == null)
+            return getHeadMat(stack).efficiency;
         return toolType.effectiveBlocks.contains(state.getBlock()) ? getHeadMat(stack).efficiency : 1.0F;
     }
 

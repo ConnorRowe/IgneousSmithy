@@ -2,7 +2,6 @@ package com.connorrowe.igneoussmithy.items;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.Color;
@@ -26,27 +25,27 @@ public class Trait
 
     public static void register()
     {
-        create("malleable", "Malleable", TraitEvent.damageItem, 0xCD7F32, (stack, player, other, world) ->
+        create("malleable", "Malleable", TraitEvent.damageItem, 0xCD7F32, (stack, player, other, world, value) ->
         {
             if (rand.nextBoolean())
             {
                 stack.attemptDamageItem(-1, rand, null);
             }
 
-            return true;
+            return 1f;
         });
 
-        create("brittle", "Brittle", TraitEvent.damageItem, 0xAFEEEE, (stack, player, other, world) ->
+        create("brittle", "Brittle", TraitEvent.damageItem, 0xAFEEEE, (stack, player, other, world, value) ->
         {
             if (rand.nextFloat() < .25f)
             {
                 stack.attemptDamageItem(10, rand, null);
             }
 
-            return true;
+            return 1f;
         });
 
-        create("mending", "Mending", TraitEvent.inventoryTick, 0x556B2F, (stack, player, other, world) ->
+        create("mending", "Mending", TraitEvent.inventoryTick, 0x556B2F, (stack, player, other, world, value) ->
         {
             float baseHealRate = .001f;
             if (world != null && world.isRaining())
@@ -57,10 +56,10 @@ public class Trait
                 stack.attemptDamageItem(-1, rand, null);
             }
 
-            return true;
+            return 1f;
         });
 
-        create("treasure", "Subterranean Treasure", TraitEvent.onBlockDestroyed, 0x191970, (stack, player, other, world) ->
+        create("treasure", "Subterranean Treasure", TraitEvent.onBlockDestroyed, 0x191970, (stack, player, other, world, value) ->
         {
             ImmutableList<Item> possibleItems = ImmutableList.of(Items.COAL, Items.IRON_INGOT, Items.GOLD_NUGGET, Items.LAPIS_LAZULI, Items.REDSTONE);
             float baseChance = 0.01f;
@@ -72,7 +71,7 @@ public class Trait
                 }
             }
 
-            return true;
+            return 1f;
         });
     }
 
@@ -147,6 +146,7 @@ public class Trait
         public static final TraitEvent onItemRightClick = create("onItemRightClick");
         public static final TraitEvent damageItem = create("damageItem");
         public static final TraitEvent inventoryTick = create("inventoryTick");
+        public static final TraitEvent calcAttackDamage = create("calcAttackDamage");
 
         private String id;
 

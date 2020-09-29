@@ -68,6 +68,12 @@ public class IgneousSmithy
                 stack = new ItemStack(ModItems.SHOVEL_HEAD.get());
                 ToolPart.setMaterial(stack, material);
                 items.add(stack);
+                stack = new ItemStack(ModItems.HATCHET_HEAD.get());
+                ToolPart.setMaterial(stack, material);
+                items.add(stack);
+                stack = new ItemStack(ModItems.SWORD_HEAD.get());
+                ToolPart.setMaterial(stack, material);
+                items.add(stack);
                 stack = new ItemStack(ModItems.BINDING.get());
                 ToolPart.setMaterial(stack, material);
                 items.add(stack);
@@ -83,6 +89,14 @@ public class IgneousSmithy
                 DynamicTool.setMaterials(stack, material, material, material);
                 items.add(stack);
                 stack = new ItemStack(ModItems.DYNAMIC_SHOVEL.get());
+                DynamicTool.initialiseStack(stack);
+                DynamicTool.setMaterials(stack, material, material, material);
+                items.add(stack);
+                stack = new ItemStack(ModItems.DYNAMIC_HATCHET.get());
+                DynamicTool.initialiseStack(stack);
+                DynamicTool.setMaterials(stack, material, material, material);
+                items.add(stack);
+                stack = new ItemStack(ModItems.DYNAMIC_SWORD.get());
                 DynamicTool.initialiseStack(stack);
                 DynamicTool.setMaterials(stack, material, material, material);
                 items.add(stack);
