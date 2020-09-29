@@ -11,8 +11,9 @@ A mod for Minecraft 1.16 which adds the ability to craft custom tools out of dif
 - [x] Sword
 - [x] Traits
 - [x] Modifiers
+- [x] Immersive Engineering metals support
 - [ ] Special tool types
 - [ ] New tool materials
 - [ ] JEI support
 - [ ] Information book
-- [ ] Optional mod support (e.g. COFH Thermal alloys)
+- [ ] More optional mod support (e.g. COFH Thermal alloys)
