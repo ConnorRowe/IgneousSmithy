@@ -1,0 +1,32 @@
+{
+  "name": "Aluminium",
+  "colour": "F0F8FF",
+  "apply_colour": true,
+  "texture": "shiny",
+  "rarity": 1,
+  "attack_damage": 6.5,
+  "harvest_level": 1,
+  "durability": 225,
+  "efficiency": 7.0,
+  "enchantability": 22,
+  "binding": {
+    "multiplier": 1.0,
+    "durability": 50
+  },
+  "repair": [
+    {
+      "tag": "forge:ingots/aluminum"
+    },
+    {
+      "tag": "forge:ingots/aluminium"
+    }
+  ],
+  "traits": {
+    "all": [
+      "malleable"
+    ],
+    "head_only": [
+
+    ]
+  }
+}

@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.item.Item;
 import net.minecraft.resources.IResourceManager;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,11 +15,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Material
 {
     public static Material DEFAULT = new Material();
+    private static final Map<ResourceLocation, ITag<Item>> itemTags = TagCollectionManager.func_242178_a/*getInstance?*/().func_241836_b/*getItemTags?*/().func_241833_a/*getTagMap?*/();
 
     public Material()
     {
@@ -56,7 +60,14 @@ public class Material
         return this.materialId;
     }
 
-    public void deserialize(ResourceLocation id, String packName, JsonObject json, IResourceManager resourceManager)
+    /**
+     * @param id              Used to retrieve the material in the future.
+     * @param packName        Name of the datapack
+     * @param json            JsonObject
+     * @param resourceManager Resource manager from reload event
+     * @return False if there was an error loading - otherwise true
+     */
+    public boolean deserialize(ResourceLocation id, String packName, JsonObject json, IResourceManager resourceManager)
     {
         this.materialId = id;
         this.packName = packName;
@@ -79,6 +90,8 @@ public class Material
         this.headOnlyTraits = new ArrayList<>();
         this.allTraits = new ArrayList<>();
         this.getTraits(json);
+
+        return this.checkRepairables();
     }
 
     private void getBindingStats(JsonObject json)
@@ -127,6 +140,37 @@ public class Material
                 this.repairTags.add(ResourceLocation.tryCreate(o.getAsJsonPrimitive("tag").getAsString()));
             }
         }
+    }
+
+    /**
+     * @return True if any loaded repair entries are valid, false if none were valid
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    private boolean checkRepairables()
+    {
+        boolean success = false;
+        for (Item item : this.repairItems)
+        {
+            if (item != null)
+            {
+                success = true;
+                break;
+            }
+        }
+        if (!success)
+        {
+            for (ResourceLocation res : this.repairTags)
+            {
+                ITag<Item> tag = itemTags.get(res);
+                if (tag != null)
+                {
+                    success = true;
+                    break;
+                }
+            }
+        }
+
+        return success;
     }
 
     private static JsonObject getJsonObject(String objectName, JsonObject json)

@@ -25,7 +25,7 @@ public class ToolHead extends ToolPart
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getMaterial(stack).name.getString() + " " + IgneousUtils.CapitaliseString(toolType.name) + " Head");
+        return new StringTextComponent(getMaterial(stack).name.getString() + " " + IgneousUtils.CapitaliseString(toolType.name) + (toolType.equals(ToolType.SWORD) ? " Blade" : " Head"));
     }
 
     @Override

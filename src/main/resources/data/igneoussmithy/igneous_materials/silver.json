@@ -1,21 +1,21 @@
 {
-  "name": "Iron",
-  "colour": "F8F8FF",
+  "name": "Silver",
+  "colour": "FFFFF0",
   "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
-  "attack_damage": 6.0,
+  "attack_damage": 6.5,
   "harvest_level": 1,
-  "durability": 250,
-  "efficiency": 6.0,
-  "enchantability": 14,
+  "durability": 225,
+  "efficiency": 7.0,
+  "enchantability": 22,
   "binding": {
-    "multiplier": 1.1,
+    "multiplier": 1.0,
     "durability": 50
   },
   "repair": [
     {
-      "tag": "forge:ingots/iron"
+      "tag": "forge:ingots/silver"
     }
   ],
   "traits": {

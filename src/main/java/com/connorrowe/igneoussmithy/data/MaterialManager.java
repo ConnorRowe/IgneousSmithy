@@ -58,8 +58,10 @@ public class MaterialManager implements IResourceManagerReloadListener
                     } else
                     {
                         Material newMat = new Material();
-                        newMat.deserialize(id, packName, json, resourceManager);
-                        MAP.put(newMat.getId(), newMat);
+                        if (newMat.deserialize(id, packName, json, resourceManager))
+                            MAP.put(newMat.getId(), newMat);
+                        else
+                            IgneousSmithy.LOGGER.error("Error deserializing material {}", name);
                     }
                 } catch (IllegalArgumentException | JsonParseException ex)
                 {

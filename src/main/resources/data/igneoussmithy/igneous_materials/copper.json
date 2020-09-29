@@ -1,27 +1,29 @@
 {
-  "name": "Iron",
-  "colour": "F8F8FF",
+  "name": "Copper",
+  "colour": "B87333",
   "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
-  "attack_damage": 6.0,
+  "attack_damage": 4.0,
   "harvest_level": 1,
-  "durability": 250,
+  "durability": 200,
   "efficiency": 6.0,
-  "enchantability": 14,
+  "enchantability": 22,
   "binding": {
-    "multiplier": 1.1,
-    "durability": 50
+    "multiplier": 0.8,
+    "durability": 0
   },
   "repair": [
     {
-      "tag": "forge:ingots/iron"
+      "tag": "forge:ingots/copper"
     }
   ],
   "traits": {
     "all": [
+      "malleable"
     ],
     "head_only": [
+
     ]
   }
 }

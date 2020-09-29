@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -342,7 +343,7 @@ public class DynamicTool extends ToolItem
     @Override
     public Set<net.minecraftforge.common.ToolType> getToolTypes(@Nonnull ItemStack stack)
     {
-        return ImmutableSet.of(toolType.forgeType);
+        return toolType.forgeType == null ? Collections.emptySet() : ImmutableSet.of(toolType.forgeType);
     }
 
     @Override
