@@ -2,11 +2,14 @@ package com.connorrowe.igneoussmithy.data;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.items.Material;
+import com.connorrowe.igneoussmithy.items.ToolPart;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
@@ -14,6 +17,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nullable;
@@ -29,6 +33,8 @@ public class MaterialManager implements IResourceManagerReloadListener
     private static final Gson GSON = (new GsonBuilder()).disableHtmlEscaping().create();
     private static final String DATA_PATH = "igneous_materials";
     private static final Map<ResourceLocation, Material> MAP = Collections.synchronizedMap(new LinkedHashMap<>());
+
+    public static final Material FAKE_MAT = makeFakeMaterial();
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager)
@@ -87,6 +93,8 @@ public class MaterialManager implements IResourceManagerReloadListener
     {
         if (id == null) return null;
 
+        if (id.getPath().equals("fake")) return FAKE_MAT;
+
         synchronized (MAP)
         {
             return MAP.get(id);
@@ -129,5 +137,52 @@ public class MaterialManager implements IResourceManagerReloadListener
         }
 
         return matOut;
+    }
+
+
+    private static Material makeFakeMaterial()
+    {
+        Material material = new Material();
+        material.materialId = new ResourceLocation(IgneousSmithy.MODID, "fake");
+        material.packName = IgneousSmithy.MODID;
+        material.name = new StringTextComponent("Any");
+        material.colour = 0x303030;
+        material.applyColour = true;
+        material.rarity = 0;
+        material.harvestLevel = 0;
+        material.durability = 0;
+        material.attackDamage = 0;
+        material.efficiency = 0;
+        material.repairTags = new ArrayList<>();
+        material.repairItems = new ArrayList<>();
+
+        synchronized (MAP)
+        {
+            MAP.put(material.materialId, material);
+        }
+
+        return material;
+    }
+
+    public static Ingredient getPartIngredient(ToolPart part)
+    {
+        ItemStack[] stacks = new ItemStack[MAP.size()];
+
+        List<ItemStack> stacksList = new ArrayList<>(MAP.size());
+
+        synchronized (MAP)
+        {
+            for (Material mat : MAP.values())
+            {
+                ItemStack stack = new ItemStack(part);
+                ToolPart.setMaterial(stack, mat);
+                stacksList.add(stack);
+            }
+        }
+
+        Collections.shuffle(stacksList);
+        stacksList.toArray(stacks);
+
+        return Ingredient.fromStacks(stacks);
     }
 }

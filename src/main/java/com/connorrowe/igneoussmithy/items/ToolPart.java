@@ -36,7 +36,7 @@ public class ToolPart extends Item
     {
         if (stack.getOrCreateTag().getString(NBT_MATERIAL_NAMESPACE).equals("") || stack.getOrCreateTag().getString(NBT_MATERIAL_PATH).equals(""))
         {
-            return Material.DEFAULT;
+            return MaterialManager.FAKE_MAT;
         } else
         {
             return MaterialManager.get(new ResourceLocation(stack.getOrCreateTag().getString(NBT_MATERIAL_NAMESPACE), stack.getOrCreateTag().getString(NBT_MATERIAL_PATH)));
@@ -59,12 +59,15 @@ public class ToolPart extends Item
     public void addInformation(@NotNull ItemStack stack, @Nullable World worldIn, @NotNull List<ITextComponent> tooltip, @NotNull ITooltipFlag flagIn)
     {
         Material mat = getMaterial(stack);
-        List<ITextComponent> info = getMaterialTooltip(mat, partType);
 
-        mat.allTraits.forEach(t -> tooltip.add(t.toTextComponent()));
+        if (mat != null && mat != MaterialManager.FAKE_MAT)
+        {
+            List<ITextComponent> info = getMaterialTooltip(mat, partType);
 
-        tooltip.addAll(info);
+            mat.allTraits.forEach(t -> tooltip.add(t.toTextComponent()));
 
+            tooltip.addAll(info);
+        }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 

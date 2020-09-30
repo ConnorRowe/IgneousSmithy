@@ -373,123 +373,126 @@ public class DynamicTool extends ToolItem
     @Override
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<ITextComponent> tooltip, @Nonnull ITooltipFlag flagIn)
     {
-        Style shiftStyle = Style.EMPTY.setColor(Color.func_240743_a_(0x808080)).setItalic(true);
-        Style brokenStyle = Style.EMPTY.setColor(Color.func_240743_a_(0x8B0000)).setItalic(true).setBold(true);
-
-        TextComponent shiftUp = new TextComponent()
+        if (!getHeadMat(stack).equals(MaterialManager.FAKE_MAT) && getHeadMat(stack) != null)
         {
-            @Nonnull
-            @Override
-            public TextComponent copyRaw()
+            Style shiftStyle = Style.EMPTY.setColor(Color.func_240743_a_(0x808080)).setItalic(true);
+            Style brokenStyle = Style.EMPTY.setColor(Color.func_240743_a_(0x8B0000)).setItalic(true).setBold(true);
+
+            TextComponent shiftUp = new TextComponent()
             {
-                return this;
+                @Nonnull
+                @Override
+                public TextComponent copyRaw()
+                {
+                    return this;
+                }
+
+                @Nonnull
+                @Override
+                public Style getStyle()
+                {
+                    return shiftStyle;
+                }
+
+                @Override
+                public String getUnformattedComponentText()
+                {
+                    return "Hold shift for stats";
+                }
+            };
+            TextComponent altUp = new TextComponent()
+            {
+                @Nonnull
+                @Override
+                public TextComponent copyRaw()
+                {
+                    return this;
+                }
+
+                @Nonnull
+                @Override
+                public Style getStyle()
+                {
+                    return shiftStyle;
+                }
+
+                @Override
+                public String getUnformattedComponentText()
+                {
+                    return "Hold alt for traits";
+                }
+            };
+
+            TextComponent broken = new TextComponent()
+            {
+                @Nonnull
+                @Override
+                public TextComponent copyRaw()
+                {
+                    return this;
+                }
+
+                @Override
+                public String getUnformattedComponentText()
+                {
+                    return "BROKEN";
+                }
+
+                @Nonnull
+                @Override
+                public Style getStyle()
+                {
+                    return brokenStyle;
+                }
+            };
+
+            TextComponent durability = new TextComponent()
+            {
+                @Nonnull
+                @Override
+                public TextComponent copyRaw()
+                {
+                    return this;
+                }
+
+                @Override
+                public String getUnformattedComponentText()
+                {
+                    return "Durability: " + (stack.getMaxDamage() - stack.getDamage()) + "/" + stack.getMaxDamage();
+                }
+
+                @Override
+                public Style getStyle()
+                {
+                    return Style.EMPTY.setColor(com.connorrowe.igneoussmithy.tools.ColourHelper.lerpColours(0x98FB98, 0x8B0000, ((float) stack.getDamage()) / ((float) stack.getMaxDamage())));
+                }
+            };
+
+            if (getBroken(stack))
+            {
+                tooltip.add(broken);
+            } else
+            {
+                tooltip.add(durability);
             }
 
-            @Nonnull
-            @Override
-            public Style getStyle()
+            if (Screen.hasShiftDown())
             {
-                return shiftStyle;
-            }
+                NonNullList<Material> materials = getMaterials(stack);
 
-            @Override
-            public String getUnformattedComponentText()
+                tooltip.add(new StringTextComponent(materials.get(2).name.getString() + " Head"));
+                tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(2), PartType.HEAD));
+                tooltip.add(new StringTextComponent(materials.get(1).name.getString() + " Binding"));
+                tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(1), PartType.BINDING));
+                tooltip.add(new StringTextComponent(materials.get(0).name.getString() + " Handle"));
+                tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(0), PartType.HANDLE));
+            } else
             {
-                return "Hold shift for stats";
+                getAllTraits(stack).forEach(t -> tooltip.add(t.toTextComponent()));
+
+                tooltip.add(shiftUp);
+                //tooltip.add(altUp);
             }
-        };
-        TextComponent altUp = new TextComponent()
-        {
-            @Nonnull
-            @Override
-            public TextComponent copyRaw()
-            {
-                return this;
-            }
-
-            @Nonnull
-            @Override
-            public Style getStyle()
-            {
-                return shiftStyle;
-            }
-
-            @Override
-            public String getUnformattedComponentText()
-            {
-                return "Hold alt for traits";
-            }
-        };
-
-        TextComponent broken = new TextComponent()
-        {
-            @Nonnull
-            @Override
-            public TextComponent copyRaw()
-            {
-                return this;
-            }
-
-            @Override
-            public String getUnformattedComponentText()
-            {
-                return "BROKEN";
-            }
-
-            @Nonnull
-            @Override
-            public Style getStyle()
-            {
-                return brokenStyle;
-            }
-        };
-
-        TextComponent durability = new TextComponent()
-        {
-            @Nonnull
-            @Override
-            public TextComponent copyRaw()
-            {
-                return this;
-            }
-
-            @Override
-            public String getUnformattedComponentText()
-            {
-                return "Durability: " + (stack.getMaxDamage() - stack.getDamage()) + "/" + stack.getMaxDamage();
-            }
-
-            @Override
-            public Style getStyle()
-            {
-                return Style.EMPTY.setColor(com.connorrowe.igneoussmithy.tools.ColourHelper.lerpColours(0x98FB98, 0x8B0000, ((float) stack.getDamage()) / ((float) stack.getMaxDamage())));
-            }
-        };
-
-        if (getBroken(stack))
-        {
-            tooltip.add(broken);
-        } else
-        {
-            tooltip.add(durability);
-        }
-
-        if (Screen.hasShiftDown())
-        {
-            NonNullList<Material> materials = getMaterials(stack);
-
-            tooltip.add(new StringTextComponent(materials.get(2).name.getString() + " Head"));
-            tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(2), PartType.HEAD));
-            tooltip.add(new StringTextComponent(materials.get(1).name.getString() + " Binding"));
-            tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(1), PartType.BINDING));
-            tooltip.add(new StringTextComponent(materials.get(0).name.getString() + " Handle"));
-            tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(0), PartType.HANDLE));
-        } else
-        {
-            getAllTraits(stack).forEach(t -> tooltip.add(t.toTextComponent()));
-
-            tooltip.add(shiftUp);
-            //tooltip.add(altUp);
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);

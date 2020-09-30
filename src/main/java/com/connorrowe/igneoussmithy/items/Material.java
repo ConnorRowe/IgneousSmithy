@@ -52,8 +52,8 @@ public class Material
     public List<ResourceLocation> repairTags;
     public List<Trait> headOnlyTraits;
     public List<Trait> allTraits;
-    private ResourceLocation materialId;
-    private String packName;
+    public ResourceLocation materialId;
+    public String packName;
 
     public ResourceLocation getId()
     {

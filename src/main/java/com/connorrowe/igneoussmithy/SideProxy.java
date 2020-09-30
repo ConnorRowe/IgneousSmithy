@@ -126,6 +126,7 @@ class SideProxy implements IProxy
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/broken"));
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "block/test"));
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/pickaxe_lucky_charm"));
+                evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "gui/anvil_recipe"));
             }
         }
 

@@ -1,5 +1,6 @@
 package com.connorrowe.igneoussmithy.items;
 
+import com.connorrowe.igneoussmithy.data.MaterialManager;
 import com.connorrowe.igneoussmithy.tools.IgneousUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,10 @@ public class ToolHead extends ToolPart
     @Override
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<ITextComponent> tooltip, @Nonnull ITooltipFlag flagIn)
     {
-        ToolPart.getMaterial(stack).headOnlyTraits.forEach(t -> tooltip.add(t.toTextComponent()));
+        Material mat = ToolPart.getMaterial(stack);
+
+        if (mat != null && mat != MaterialManager.FAKE_MAT)
+            mat.headOnlyTraits.forEach(t -> tooltip.add(t.toTextComponent()));
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
