@@ -73,6 +73,17 @@ public class Trait
 
             return 1f;
         });
+
+        create("jagged", "Jagged", TraitEvent.calcAttackDamage, 0xF0FFFF, (stack, player, other, world, value) ->
+        {
+            float damageOut = value;
+            float baseChance = 0.25f;
+
+            if(rand.nextFloat() < baseChance)
+                damageOut *= 1.25;
+
+            return damageOut;
+        });
     }
 
     public String name;

@@ -17,6 +17,7 @@ public class Modifier
     public static void register()
     {
         create("lucky_charm", Trait.get("treasure"), ImmutableSet.of(ToolType.PICKAXE), new ResourceLocation(IgneousSmithy.MODID, "lucky_charm"), 0xFFFFFF);
+        create("jagged", Trait.get("jagged"), ImmutableSet.of(ToolType.SWORD), new ResourceLocation(IgneousSmithy.MODID, "jagged_quartz"), 0xFFFFFF);
     }
 
     private static void create(String name, Trait trait, Set<ToolType> applicableTools, ResourceLocation texture, int colour)

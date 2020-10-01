@@ -29,6 +29,7 @@ public class ModItems
     public static final RegistryObject<Diagram> DIAGRAM_HANDLE = Registration.ITEMS.register("diagram_handle", () -> new Diagram(PartType.HANDLE, HANDLE, 2));
 
     public static final RegistryObject<ModifierItem> LUCKY_CHARM = Registration.ITEMS.register("lucky_charm", () -> new ModifierItem("lucky_charm"));
+    public static final RegistryObject<ModifierItem> JAGGED_QUARTZ = Registration.ITEMS.register("jagged_quartz", () -> new ModifierItem("jagged"));
 
     private static Item.Properties defProps()
     {

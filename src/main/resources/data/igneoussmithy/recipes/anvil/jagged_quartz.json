@@ -1,0 +1,14 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "tag": "forge:gems/quartz"
+    },
+    {
+      "item": "minecraft:flint"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:jagged_quartz"
+  }
+}
