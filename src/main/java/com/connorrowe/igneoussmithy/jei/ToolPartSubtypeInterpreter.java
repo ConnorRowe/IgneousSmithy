@@ -26,6 +26,6 @@ public class ToolPartSubtypeInterpreter implements ISubtypeInterpreter
 
         String matName = mat.getId().getPath();
 
-        return matName + ((ToolPart) (itemStack.getItem())).getPartType().name;
+        return matName + ((ToolPart) (itemStack.getItem())).getPartType().id;
     }
 }

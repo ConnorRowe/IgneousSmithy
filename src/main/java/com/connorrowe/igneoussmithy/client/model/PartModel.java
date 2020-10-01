@@ -63,7 +63,7 @@ public final class PartModel implements IModelGeometry<PartModel>
             texName = "item/tool/pickaxe_head";
             if (toolHead != null)
             {
-                texName = "item/tool/" + toolHead.getToolType().name + "_head";
+                texName = "item/tool/" + toolHead.getToolType().id + "_head";
             }
         } else if (partType == PartType.BINDING)
             texName = "item/part/binding";

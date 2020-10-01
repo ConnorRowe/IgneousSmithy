@@ -1,5 +1,5 @@
 {
-  "name": "Diamond",
+  "name": "item.minecraft.diamond",
   "colour": "00FFCC",
   "apply_colour": true,
   "texture": "shiny",

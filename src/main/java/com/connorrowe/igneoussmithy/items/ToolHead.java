@@ -6,6 +6,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,9 @@ public class ToolHead extends ToolPart
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getMaterial(stack).name.getString() + " " + IgneousUtils.CapitaliseString(toolType.name) + (toolType.equals(ToolType.SWORD) ? " Blade" : " Head"));
+        return new StringTextComponent(getMaterial(stack).name.getString()).appendString(" ")
+                .append(new TranslationTextComponent( toolType.nameKey)).appendString(" ")
+                .append(new TranslationTextComponent(toolType.equals(ToolType.SWORD) ? "part.igneoussmithy.blade" : "part.igneoussmithy.head"));
     }
 
     @Override

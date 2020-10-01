@@ -1,5 +1,5 @@
 {
-  "name": "Steel",
+  "name": "material.igneoussmithy.steel",
   "colour": "595755",
   "apply_colour": true,
   "texture": "shiny",

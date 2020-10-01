@@ -1,5 +1,5 @@
 {
-  "name": "Stone",
+  "name": "block.minecraft.stone",
   "colour": "828282",
   "apply_colour": true,
   "texture": "dull",

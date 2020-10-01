@@ -47,7 +47,7 @@ public class ToolPart extends Item
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getMaterial(stack).name.getString() + " " + partType.name);
+        return new StringTextComponent(getMaterial(stack).name.getString()).appendString(" ").append(new TranslationTextComponent(partType.nameKey));
     }
 
     public PartType getPartType()

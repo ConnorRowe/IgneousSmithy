@@ -14,24 +14,26 @@ public final class ToolType
     protected static final Set<Block> EFFECTIVE_SHOVEL = ImmutableSet.of(Blocks.CLAY, Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.PODZOL, Blocks.FARMLAND, Blocks.GRASS_BLOCK, Blocks.GRAVEL, Blocks.MYCELIUM, Blocks.SAND, Blocks.RED_SAND, Blocks.SNOW_BLOCK, Blocks.SNOW, Blocks.SOUL_SAND, Blocks.GRASS_PATH, Blocks.WHITE_CONCRETE_POWDER, Blocks.ORANGE_CONCRETE_POWDER, Blocks.MAGENTA_CONCRETE_POWDER, Blocks.LIGHT_BLUE_CONCRETE_POWDER, Blocks.YELLOW_CONCRETE_POWDER, Blocks.LIME_CONCRETE_POWDER, Blocks.PINK_CONCRETE_POWDER, Blocks.GRAY_CONCRETE_POWDER, Blocks.LIGHT_GRAY_CONCRETE_POWDER, Blocks.CYAN_CONCRETE_POWDER, Blocks.PURPLE_CONCRETE_POWDER, Blocks.BLUE_CONCRETE_POWDER, Blocks.BROWN_CONCRETE_POWDER, Blocks.GREEN_CONCRETE_POWDER, Blocks.RED_CONCRETE_POWDER, Blocks.BLACK_CONCRETE_POWDER, Blocks.SOUL_SOIL);
     protected static final Set<Block> EFFECTIVE_SWORD = ImmutableSet.of(Blocks.COBWEB);
 
-    public static final ToolType PICKAXE = create("pickaxe", EFFECTIVE_PICKAXE, net.minecraftforge.common.ToolType.PICKAXE);
-    public static final ToolType SHOVEL = create("shovel", EFFECTIVE_SHOVEL, net.minecraftforge.common.ToolType.SHOVEL);
-    public static final ToolType HATCHET = create("hatchet", EFFECTIVE_AXE, net.minecraftforge.common.ToolType.AXE);
-    public static final ToolType SWORD = create("sword", EFFECTIVE_SWORD, null);
+    public static final ToolType PICKAXE = create("pickaxe", EFFECTIVE_PICKAXE, net.minecraftforge.common.ToolType.PICKAXE, "part.igneoussmithy.pickaxe");
+    public static final ToolType SHOVEL = create("shovel", EFFECTIVE_SHOVEL, net.minecraftforge.common.ToolType.SHOVEL, "part.igneoussmithy.shovel");
+    public static final ToolType HATCHET = create("hatchet", EFFECTIVE_AXE, net.minecraftforge.common.ToolType.AXE, "part.igneoussmithy.hatchet");
+    public static final ToolType SWORD = create("sword", EFFECTIVE_SWORD, null, "part.igneoussmithy.sword");
 
-    private static ToolType create(String name, Set<Block> effectiveBlocks, @Nullable net.minecraftforge.common.ToolType forgeType)
+    private static ToolType create(String name, Set<Block> effectiveBlocks, @Nullable net.minecraftforge.common.ToolType forgeType, String nameKey)
     {
-        return new ToolType(name, effectiveBlocks, forgeType);
+        return new ToolType(name, effectiveBlocks, forgeType, nameKey);
     }
 
-    public final String name;
+    public final String id;
     public final Set<Block> effectiveBlocks;
     public net.minecraftforge.common.ToolType forgeType;
+    public final String nameKey;
 
-    ToolType(String name, Set<Block> effectiveBlocks, net.minecraftforge.common.ToolType forgeType)
+    ToolType(String id, Set<Block> effectiveBlocks, net.minecraftforge.common.ToolType forgeType, String nameKey)
     {
-        this.name = name;
+        this.id = id;
         this.effectiveBlocks = effectiveBlocks;
         this.forgeType = forgeType;
+        this.nameKey = nameKey;
     }
 }

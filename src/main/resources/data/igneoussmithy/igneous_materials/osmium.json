@@ -1,21 +1,21 @@
 {
-  "name": "material.igneoussmithy.lead",
-  "colour": "3A3E4A",
+  "name": "material.igneoussmithy.osmium",
+  "colour": "E6E6FA",
   "apply_colour": true,
   "texture": "shiny",
   "rarity": 1,
-  "attack_damage": 6.5,
+  "attack_damage": 6.0,
   "harvest_level": 1,
-  "durability": 225,
-  "efficiency": 7.0,
-  "enchantability": 22,
+  "durability": 250,
+  "efficiency": 6.0,
+  "enchantability": 14,
   "binding": {
-    "multiplier": 1.0,
+    "multiplier": 1.1,
     "durability": 50
   },
   "repair": [
     {
-      "tag": "forge:ingots/lead"
+      "tag": "forge:ingots/osmium"
     }
   ],
   "traits": {

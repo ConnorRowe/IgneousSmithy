@@ -367,7 +367,9 @@ public class DynamicTool extends ToolItem
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
-        return new StringTextComponent(getHeadMat(stack).name.getString() + " " + IgneousUtils.CapitaliseString(toolType.name));
+        return new StringTextComponent(getHeadMat(stack).name.getString()).appendString(" ")
+                .append(new TranslationTextComponent( toolType.nameKey));
+
     }
 
     @Override

@@ -94,7 +94,7 @@ public final class ToolModel implements IModelGeometry<ToolModel>
         {
             if (modifier.texture != null)
             {
-                ResourceLocation tex = new ResourceLocation(modifier.texture.getNamespace(), "item/tool/" + toolType.name + "_" + modifier.texture.getPath());
+                ResourceLocation tex = new ResourceLocation(modifier.texture.getNamespace(), "item/tool/" + toolType.id + "_" + modifier.texture.getPath());
 
                 IBakedModel modifierModel = ModelHelper.getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides, tex);
 
@@ -141,7 +141,7 @@ public final class ToolModel implements IModelGeometry<ToolModel>
         protected IBakedModel getBakedModel(IBakedModel originalModel, ItemStack stack,
                                             @Nullable World world, @Nullable LivingEntity entity)
         {
-            System.out.println("getBakedModel: " + DynamicTool.getHeadMat(stack).name.getString() + DynamicTool.getToolType(stack).name);
+            System.out.println("getBakedModel: " + DynamicTool.getHeadMat(stack).name.getString() + DynamicTool.getToolType(stack).id);
 
             boolean isBroken = DynamicTool.getBroken(stack);
 

@@ -33,7 +33,7 @@ public class ModifierItem extends Item
             tooltip.add(new IgneousUtils.BasicTextComponent("Can be used by:", Style.EMPTY.setColor(Color.func_240743_a_(java.awt.Color.gray.getRGB()))));
             for (ToolType toolType : Modifier.get(modifierName).applicableTools)
             {
-                tooltip.add(new IgneousUtils.BasicTextComponent(IgneousUtils.CapitaliseString(toolType.name), Style.EMPTY.setColor(Color.func_240743_a_(0xA9A9A9))));
+                tooltip.add(new IgneousUtils.BasicTextComponent(IgneousUtils.CapitaliseString(toolType.id), Style.EMPTY.setColor(Color.func_240743_a_(0xA9A9A9))));
             }
         } else
         {

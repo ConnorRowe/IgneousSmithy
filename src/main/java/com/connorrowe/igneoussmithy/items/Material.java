@@ -11,6 +11,7 @@ import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class Material
     {
         this.materialId = id;
         this.packName = packName;
-        this.name = ITextComponent.Serializer.func_240641_a_(getPrimitiveElement("name", json));
+        this.name = new TranslationTextComponent(getPrimitiveElement( "name", json).getAsString());
         this.colour = Integer.parseInt(getPrimitiveElement("colour", json).getAsString(), 16);
         this.applyColour = getPrimitiveElement("apply_colour", json).getAsBoolean();
         this.rarity = getPrimitiveElement("rarity", json).getAsInt();

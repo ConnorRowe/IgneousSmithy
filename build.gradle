@@ -148,9 +148,10 @@ dependencies {
     // Immersive Engineering
     runtimeOnly fg.deobf('curse.maven:immersiveengineering:3060738')
 
-    compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
-        transitive = false
-    })
+    // Mekanism
+//    runtimeOnly fg.deobf('curse.maven:mekanism:3032353')
+
+    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
