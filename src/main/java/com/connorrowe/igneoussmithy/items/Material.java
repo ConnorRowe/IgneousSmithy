@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class Material
 {
     public static Material DEFAULT = new Material();
-    private static final Map<ResourceLocation, ITag<Item>> itemTags = TagCollectionManager.func_242178_a/*getInstance?*/().func_241836_b/*getItemTags?*/().func_241833_a/*getTagMap?*/();
+    public static final Map<ResourceLocation, ITag<Item>> itemTags = TagCollectionManager.func_242178_a/*getInstance?*/().func_241836_b/*getItemTags?*/().func_241833_a/*getTagMap?*/();
 
     public Material()
     {

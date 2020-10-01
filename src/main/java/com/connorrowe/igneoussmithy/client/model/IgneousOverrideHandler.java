@@ -35,8 +35,9 @@ public abstract class IgneousOverrideHandler<T extends IModelGeometry<T>> extend
             .expireAfterWrite(5, TimeUnit.MINUTES).build();
 
     public IgneousOverrideHandler(T model, IModelConfiguration owner, ModelBakery bakery,
-                                   Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
-                                   ResourceLocation modelLocation) {
+                                  Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
+                                  ResourceLocation modelLocation)
+    {
         super();
         this.model = model;
         this.owner = owner;
@@ -49,16 +50,20 @@ public abstract class IgneousOverrideHandler<T extends IModelGeometry<T>> extend
     @Nonnull
     @Override
     public IBakedModel func_239290_a_(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack,
-                                      @Nullable ClientWorld worldIn, @Nullable LivingEntity entityIn) {
+                                      @Nullable ClientWorld worldIn, @Nullable LivingEntity entityIn)
+    {
         CompoundNBT data = stack.getOrCreateTag();
         IBakedModel output = originalModel;
 
-        if (!data.isEmpty()) {
+        if (!data.isEmpty())
+        {
             ModelHelper.CacheKey key = getCacheKey(originalModel, stack);
-            try {
+            try
+            {
                 output = bakedModelCache
                         .get(key, () -> getBakedModel(originalModel, stack, worldIn, entityIn));
-            } catch (ExecutionException e) {
+            } catch (ExecutionException e)
+            {
                 IgneousSmithy.LOGGER.error("Error baking model!");
             }
         }
@@ -68,7 +73,8 @@ public abstract class IgneousOverrideHandler<T extends IModelGeometry<T>> extend
     protected abstract IBakedModel getBakedModel(IBakedModel originalModel, ItemStack stack,
                                                  @Nullable World world, @Nullable LivingEntity entity);
 
-    ModelHelper.CacheKey getCacheKey(IBakedModel original, ItemStack stack) {
+    ModelHelper.CacheKey getCacheKey(IBakedModel original, ItemStack stack)
+    {
         return new ModelHelper.CacheKey(original, stack);
     }
 }

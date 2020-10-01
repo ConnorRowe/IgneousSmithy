@@ -13,14 +13,16 @@ public enum ToolLoader implements IModelLoader<ToolModel>
     INSTANCE;
 
     @Override
-    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager)
+    {
 
     }
 
     @Nonnull
     @Override
     public ToolModel read(@Nonnull JsonDeserializationContext deserializationContext,
-                              @Nonnull JsonObject modelContents) {
+                          @Nonnull JsonObject modelContents)
+    {
         return new ToolModel();
     }
 }

@@ -23,7 +23,8 @@ public class PerspectiveItemModel extends BakedItemModel
 
     public PerspectiveItemModel(ImmutableList<BakedQuad> quads, TextureAtlasSprite particle,
                                 ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> transforms, ItemOverrideList overrides,
-                                boolean untransformed, boolean isSideLit, ItemCameraTransforms cameraTransforms) {
+                                boolean untransformed, boolean isSideLit, ItemCameraTransforms cameraTransforms)
+    {
         super(quads, particle, transforms, overrides, untransformed, isSideLit);
         this.cameraTransforms = cameraTransforms;
     }
@@ -31,23 +32,27 @@ public class PerspectiveItemModel extends BakedItemModel
     @Nonnull
     @Override
     public IBakedModel handlePerspective(@Nonnull ItemCameraTransforms.TransformType type,
-                                         @Nonnull MatrixStack mat) {
+                                         @Nonnull MatrixStack mat)
+    {
 
-        if (cameraTransforms != null) {
+        if (cameraTransforms != null)
+        {
             return net.minecraftforge.client.ForgeHooksClient.handlePerspective(this, type, mat);
         }
         return PerspectiveMapWrapper.handlePerspective(this, transforms, type, mat);
     }
 
     @Override
-    public boolean doesHandlePerspectives() {
+    public boolean doesHandlePerspectives()
+    {
         return true;
     }
 
     @Deprecated
     @Nonnull
     @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
+    public ItemCameraTransforms getItemCameraTransforms()
+    {
         return cameraTransforms;
     }
 }

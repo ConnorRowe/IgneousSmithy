@@ -13,14 +13,16 @@ public enum PartLoader implements IModelLoader<PartModel>
     INSTANCE;
 
     @Override
-    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager)
+    {
 
     }
 
     @Nonnull
     @Override
     public PartModel read(@Nonnull JsonDeserializationContext deserializationContext,
-                          @Nonnull JsonObject modelContents) {
+                          @Nonnull JsonObject modelContents)
+    {
         return new PartModel();
     }
 }

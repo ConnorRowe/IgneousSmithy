@@ -73,7 +73,7 @@ public final class PartModel implements IModelGeometry<PartModel>
         // test if texture exists
         try
         {
-            Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(IgneousSmithy.MODID,  "textures/" + texName + "_" + material.texture + ".png"));
+            Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(IgneousSmithy.MODID, "textures/" + texName + "_" + material.texture + ".png"));
             texName += "_" + material.texture;
         } catch (IOException e)
         {
@@ -89,7 +89,7 @@ public final class PartModel implements IModelGeometry<PartModel>
 
         builder.addAll(model.getQuads(null, null, random, EmptyModelData.INSTANCE));
 
-        if(material.applyColour || fallBack)
+        if (material.applyColour || fallBack)
             ColourHelper.colorQuads(model, material.colour, random, builder);
 
         TextureAtlasSprite particleSprite = model.getParticleTexture(EmptyModelData.INSTANCE);

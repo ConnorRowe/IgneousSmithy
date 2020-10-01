@@ -2,6 +2,7 @@ package com.connorrowe.igneoussmithy.jei;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.recipes.AnvilRecipeSerializer;
+import com.connorrowe.igneoussmithy.recipes.DiagramRecipe;
 import com.connorrowe.igneoussmithy.setup.ModBlocks;
 import com.connorrowe.igneoussmithy.setup.ModItems;
 import mezz.jei.api.IModPlugin;
@@ -33,16 +34,22 @@ public class IgneousJeiPlugin implements IModPlugin
     {
         registration.useNbtForSubtypes(ModItems.DYNAMIC_PICKAXE.get(), ModItems.DYNAMIC_SHOVEL.get(),
                 ModItems.DYNAMIC_HATCHET.get(), ModItems.DYNAMIC_SWORD.get());
-        registration.useNbtForSubtypes(ModItems.HANDLE.get(), ModItems.BINDING.get(), ModItems.PICKAXE_HEAD.get(),
-                ModItems.SHOVEL_HEAD.get(), ModItems.HATCHET_HEAD.get(), ModItems.SWORD_HEAD.get());
+
+        registration.registerSubtypeInterpreter(ModItems.PICKAXE_HEAD.get(), ToolPartSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.SHOVEL_HEAD.get(), ToolPartSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.HATCHET_HEAD.get(), ToolPartSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.SWORD_HEAD.get(), ToolPartSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.HANDLE.get(), ToolPartSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.BINDING.get(), ToolPartSubtypeInterpreter.INSTANCE);
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration)
     {
         registration.addRecipes(new ArrayList<>(AnvilRecipeSerializer.MAP.values()), AnvilRecipeCategory.uid);
-
         registration.addRecipes(AnvilRecipeSerializer.getFakeRecipes(), AnvilRecipeCategory.uid);
+
+        registration.addRecipes(DiagramRecipe.getDiagramRecipes(), DiagramRecipeCategory.uid);
     }
 
     @Override
@@ -50,11 +57,17 @@ public class IgneousJeiPlugin implements IModPlugin
     {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MAGMATIC_ANVIL), AnvilRecipeCategory.uid);
         registration.addRecipeCatalyst(new ItemStack(ModItems.BALL_PEEN_HAMMER.get()), AnvilRecipeCategory.uid);
+
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MAGMATIC_ANVIL), DiagramRecipeCategory.uid);
+        registration.addRecipeCatalyst(new ItemStack(ModItems.BALL_PEEN_HAMMER.get()), DiagramRecipeCategory.uid);
+
     }
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration)
     {
         registration.addRecipeCategories(new AnvilRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+
+        registration.addRecipeCategories(new DiagramRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 }
