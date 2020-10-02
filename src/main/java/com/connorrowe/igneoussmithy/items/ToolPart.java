@@ -64,7 +64,7 @@ public class ToolPart extends Item
         {
             List<ITextComponent> info = getMaterialTooltip(mat, partType);
 
-            mat.allTraits.forEach(t -> tooltip.add(t.toTextComponent()));
+            mat.allTraits.forEach(t -> tooltip.add(t.getName()));
 
             tooltip.addAll(info);
         }

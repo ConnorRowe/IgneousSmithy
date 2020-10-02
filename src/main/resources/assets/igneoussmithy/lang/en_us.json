@@ -32,5 +32,22 @@
   "part.igneoussmithy.shovel": "Shovel",
   "part.igneoussmithy.sword": "Sword",
   "part.igneoussmithy.binding": "Binding",
-  "part.igneoussmithy.handle": "Handle"
+  "part.igneoussmithy.handle": "Handle",
+  "trait.igneoussmithy.malleable.name": "Malleable",
+  "trait.igneoussmithy.malleable.desc": "Gives a 50% chance not to take damage.",
+  "trait.igneoussmithy.brittle.name": "Brittle",
+  "trait.igneoussmithy.brittle.desc": "A brittle tool sometimes cracks and takes 10 damage.",
+  "trait.igneoussmithy.mending.name": "Mending",
+  "trait.igneoussmithy.mending.desc": "The tool passively self-repairs slowly. Faster when it's raining.",
+  "trait.igneoussmithy.treasure.name": "Subterranean Treasure",
+  "trait.igneoussmithy.treasure.desc": "When mining, you'll sometimes find treasures of the earth.",
+  "trait.igneoussmithy.jagged.name": "Jagged",
+  "trait.igneoussmithy.jagged.desc": "Gives a 25% chance to deal 25% more damage.",
+  "tooltip.igneoussmithy.view_stats": "Hold shift for stats",
+  "tooltip.igneoussmithy.view_traits": "Hold alt for trait descriptions",
+  "tooltip.igneoussmithy.broken": "BROKEN",
+  "tooltip.igneoussmithy.durability": "Durability: %1$s / %2$s",
+  "tooltip.igneoussmithy.applicable_tools": "Can be used by:",
+  "tooltip.igneoussmithy.provides": "Provides:",
+  "tooltip.igneoussmithy.view_tools": "Hold shift for applicable tools"
 }

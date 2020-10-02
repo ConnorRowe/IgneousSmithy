@@ -1,7 +1,6 @@
 package com.connorrowe.igneoussmithy.items;
 
 import com.connorrowe.igneoussmithy.data.MaterialManager;
-import com.connorrowe.igneoussmithy.tools.IgneousUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -28,7 +27,7 @@ public class ToolHead extends ToolPart
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
         return new StringTextComponent(getMaterial(stack).name.getString()).appendString(" ")
-                .append(new TranslationTextComponent( toolType.nameKey)).appendString(" ")
+                .append(new TranslationTextComponent(toolType.nameKey)).appendString(" ")
                 .append(new TranslationTextComponent(toolType.equals(ToolType.SWORD) ? "part.igneoussmithy.blade" : "part.igneoussmithy.head"));
     }
 
@@ -38,7 +37,7 @@ public class ToolHead extends ToolPart
         Material mat = ToolPart.getMaterial(stack);
 
         if (mat != null && mat != MaterialManager.FAKE_MAT)
-            mat.headOnlyTraits.forEach(t -> tooltip.add(t.toTextComponent()));
+            mat.headOnlyTraits.forEach(t -> tooltip.add(t.getName()));
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }

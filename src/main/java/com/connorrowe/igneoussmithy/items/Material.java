@@ -72,7 +72,7 @@ public class Material
     {
         this.materialId = id;
         this.packName = packName;
-        this.name = new TranslationTextComponent(getPrimitiveElement( "name", json).getAsString());
+        this.name = new TranslationTextComponent(getPrimitiveElement("name", json).getAsString());
         this.colour = Integer.parseInt(getPrimitiveElement("colour", json).getAsString(), 16);
         this.applyColour = getPrimitiveElement("apply_colour", json).getAsBoolean();
         this.rarity = getPrimitiveElement("rarity", json).getAsInt();

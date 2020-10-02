@@ -7,9 +7,8 @@ import net.minecraft.item.Items;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -25,7 +24,7 @@ public class Trait
 
     public static void register()
     {
-        create("malleable", "Malleable", TraitEvent.damageItem, 0xCD7F32, (stack, player, other, world, value) ->
+        create("malleable", "trait.igneoussmithy.malleable.name", "trait.igneoussmithy.malleable.desc", TraitEvent.damageItem, 0xCD7F32, (stack, player, other, world, value) ->
         {
             if (rand.nextBoolean())
             {
@@ -35,7 +34,7 @@ public class Trait
             return 1f;
         });
 
-        create("brittle", "Brittle", TraitEvent.damageItem, 0xAFEEEE, (stack, player, other, world, value) ->
+        create("brittle", "trait.igneoussmithy.brittle.name", "trait.igneoussmithy.brittle.desc", TraitEvent.damageItem, 0xAFEEEE, (stack, player, other, world, value) ->
         {
             if (rand.nextFloat() < .25f)
             {
@@ -45,7 +44,7 @@ public class Trait
             return 1f;
         });
 
-        create("mending", "Mending", TraitEvent.inventoryTick, 0x556B2F, (stack, player, other, world, value) ->
+        create("mending", "trait.igneoussmithy.mending.name", "trait.igneoussmithy.mending.desc", TraitEvent.inventoryTick, 0x556B2F, (stack, player, other, world, value) ->
         {
             float baseHealRate = .001f;
             if (world != null && world.isRaining())
@@ -59,7 +58,7 @@ public class Trait
             return 1f;
         });
 
-        create("treasure", "Subterranean Treasure", TraitEvent.onBlockDestroyed, 0x191970, (stack, player, other, world, value) ->
+        create("treasure", "trait.igneoussmithy.treasure.name", "trait.igneoussmithy.treasure.desc", TraitEvent.onBlockDestroyed, 0x191970, (stack, player, other, world, value) ->
         {
             ImmutableList<Item> possibleItems = ImmutableList.of(Items.COAL, Items.IRON_INGOT, Items.GOLD_NUGGET, Items.LAPIS_LAZULI, Items.REDSTONE);
             float baseChance = 0.01f;
@@ -74,27 +73,29 @@ public class Trait
             return 1f;
         });
 
-        create("jagged", "Jagged", TraitEvent.calcAttackDamage, 0xF0FFFF, (stack, player, other, world, value) ->
+        create("jagged", "trait.igneoussmithy.jagged.name", "trait.igneoussmithy.jagged.desc", TraitEvent.calcAttackDamage, 0xF0FFFF, (stack, player, other, world, value) ->
         {
             float damageOut = value;
             float baseChance = 0.25f;
 
-            if(rand.nextFloat() < baseChance)
+            if (rand.nextFloat() < baseChance)
                 damageOut *= 1.25;
 
             return damageOut;
         });
     }
 
-    public String name;
+    public String nameKey;
+    public String descriptionKey;
     public TraitEvent event;
     public int colour;
     public ITraitConsumer traitConsumer;
 
-    private static void create(String id, String name, TraitEvent traitEvent, int colour, ITraitConsumer traitConsumer)
+    private static void create(String id, String nameKey, String descriptionKey, TraitEvent traitEvent, int colour, ITraitConsumer traitConsumer)
     {
         Trait newTrait = new Trait();
-        newTrait.name = name;
+        newTrait.nameKey = nameKey;
+        newTrait.descriptionKey = descriptionKey;
         newTrait.event = traitEvent;
         newTrait.colour = colour;
         newTrait.traitConsumer = traitConsumer;
@@ -121,32 +122,14 @@ public class Trait
         }
     }
 
-    public ITextComponent toTextComponent()
+    public ITextComponent getName()
     {
+        return new TranslationTextComponent(nameKey).setStyle(Style.EMPTY.setColor(Color.func_240743_a_(colour)));
+    }
 
-        return new TextComponent()
-        {
-            @Nonnull
-            @Override
-            public TextComponent copyRaw()
-            {
-                return this;
-            }
-
-            @Nonnull
-            @Override
-            public String getUnformattedComponentText()
-            {
-                return name;
-            }
-
-            @Nonnull
-            @Override
-            public Style getStyle()
-            {
-                return Style.EMPTY.setColor(Color.func_240743_a_(colour));
-            }
-        };
+    public ITextComponent getDescription()
+    {
+        return new TranslationTextComponent(descriptionKey).setStyle(Style.EMPTY.setColor(Color.func_240743_a_(colour)));
     }
 
     public static class TraitEvent

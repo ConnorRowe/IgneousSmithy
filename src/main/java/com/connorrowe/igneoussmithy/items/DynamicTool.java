@@ -2,7 +2,6 @@ package com.connorrowe.igneoussmithy.items;
 
 import com.connorrowe.igneoussmithy.IgneousSmithy;
 import com.connorrowe.igneoussmithy.data.MaterialManager;
-import com.connorrowe.igneoussmithy.tools.IgneousUtils;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
@@ -368,7 +367,7 @@ public class DynamicTool extends ToolItem
     public ITextComponent getDisplayName(@Nonnull ItemStack stack)
     {
         return new StringTextComponent(getHeadMat(stack).name.getString()).appendString(" ")
-                .append(new TranslationTextComponent( toolType.nameKey));
+                .append(new TranslationTextComponent(toolType.nameKey));
 
     }
 
@@ -379,96 +378,15 @@ public class DynamicTool extends ToolItem
         {
             Style shiftStyle = Style.EMPTY.setColor(Color.func_240743_a_(0x808080)).setItalic(true);
             Style brokenStyle = Style.EMPTY.setColor(Color.func_240743_a_(0x8B0000)).setItalic(true).setBold(true);
+            Style durabilityStyle = Style.EMPTY.setColor(com.connorrowe.igneoussmithy.tools.ColourHelper.lerpColours(0x98FB98, 0x8B0000, ((float) stack.getDamage()) / ((float) stack.getMaxDamage())));
 
-            TextComponent shiftUp = new TextComponent()
-            {
-                @Nonnull
-                @Override
-                public TextComponent copyRaw()
-                {
-                    return this;
-                }
+            ITextComponent shiftUp = new TranslationTextComponent("tooltip.igneoussmithy.view_stats").setStyle(shiftStyle);
+            ITextComponent altUp = new TranslationTextComponent("tooltip.igneoussmithy.view_traits").setStyle(shiftStyle);
+            ITextComponent broken = new TranslationTextComponent("tooltip.igneoussmithy.broken").setStyle(brokenStyle);
 
-                @Nonnull
-                @Override
-                public Style getStyle()
-                {
-                    return shiftStyle;
-                }
+            ITextComponent durability = new TranslationTextComponent("tooltip.igneoussmithy.durability", stack.getMaxDamage() - stack.getDamage(), stack.getMaxDamage()).setStyle(durabilityStyle);
 
-                @Override
-                public String getUnformattedComponentText()
-                {
-                    return "Hold shift for stats";
-                }
-            };
-            TextComponent altUp = new TextComponent()
-            {
-                @Nonnull
-                @Override
-                public TextComponent copyRaw()
-                {
-                    return this;
-                }
-
-                @Nonnull
-                @Override
-                public Style getStyle()
-                {
-                    return shiftStyle;
-                }
-
-                @Override
-                public String getUnformattedComponentText()
-                {
-                    return "Hold alt for traits";
-                }
-            };
-
-            TextComponent broken = new TextComponent()
-            {
-                @Nonnull
-                @Override
-                public TextComponent copyRaw()
-                {
-                    return this;
-                }
-
-                @Override
-                public String getUnformattedComponentText()
-                {
-                    return "BROKEN";
-                }
-
-                @Nonnull
-                @Override
-                public Style getStyle()
-                {
-                    return brokenStyle;
-                }
-            };
-
-            TextComponent durability = new TextComponent()
-            {
-                @Nonnull
-                @Override
-                public TextComponent copyRaw()
-                {
-                    return this;
-                }
-
-                @Override
-                public String getUnformattedComponentText()
-                {
-                    return "Durability: " + (stack.getMaxDamage() - stack.getDamage()) + "/" + stack.getMaxDamage();
-                }
-
-                @Override
-                public Style getStyle()
-                {
-                    return Style.EMPTY.setColor(com.connorrowe.igneoussmithy.tools.ColourHelper.lerpColours(0x98FB98, 0x8B0000, ((float) stack.getDamage()) / ((float) stack.getMaxDamage())));
-                }
-            };
+            boolean hasTraits = getAllTraits(stack).size() > 0;
 
             if (getBroken(stack))
             {
@@ -482,18 +400,21 @@ public class DynamicTool extends ToolItem
             {
                 NonNullList<Material> materials = getMaterials(stack);
 
-                tooltip.add(new StringTextComponent(materials.get(2).name.getString() + " Head"));
+                tooltip.add(materials.get(2).name.deepCopy().appendString(" ").append(new TranslationTextComponent(toolType.equals(ToolType.SWORD) ? "part.igneoussmithy.blade" : "part.igneoussmithy.head")));
                 tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(2), PartType.HEAD));
-                tooltip.add(new StringTextComponent(materials.get(1).name.getString() + " Binding"));
+                tooltip.add(materials.get(1).name.deepCopy().appendString(" ").append(new TranslationTextComponent("part.igneoussmithy.binding")));
                 tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(1), PartType.BINDING));
-                tooltip.add(new StringTextComponent(materials.get(0).name.getString() + " Handle"));
+                tooltip.add(materials.get(0).name.deepCopy().appendString(" ").append(new TranslationTextComponent("part.igneoussmithy.handle")));
                 tooltip.addAll(ToolPart.getMaterialTooltip(materials.get(0), PartType.HANDLE));
+            } else if (Screen.hasAltDown() && hasTraits)
+            {
+                getAllTraits(stack).forEach(t -> tooltip.add(t.getDescription()));
             } else
             {
-                getAllTraits(stack).forEach(t -> tooltip.add(t.toTextComponent()));
-
+                getAllTraits(stack).forEach(t -> tooltip.add(t.getName()));
                 tooltip.add(shiftUp);
-                //tooltip.add(altUp);
+                if (hasTraits)
+                    tooltip.add(altUp);
             }
         }
 
