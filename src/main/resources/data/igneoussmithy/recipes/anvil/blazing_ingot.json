@@ -1,0 +1,17 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "tag": "forge:ingots/gold"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:blazing_ingot"
+  }
+}

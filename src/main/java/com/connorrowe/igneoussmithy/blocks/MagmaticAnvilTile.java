@@ -210,6 +210,7 @@ public class MagmaticAnvilTile extends TileEntity
                         ItemStack craftedStack = new ItemStack(tool);
                         DynamicTool.initialiseStack(craftedStack);
                         DynamicTool.setMaterials(craftedStack, ToolPart.getMaterial(h.getStackInSlot(headSlot)), ToolPart.getMaterial(h.getStackInSlot(bindSlot)), ToolPart.getMaterial(h.getStackInSlot(handSlot)));
+                        DynamicTool.onStackCrafted(craftedStack);
 
                         for (ItemStack stack : h.getStacks())
                         {

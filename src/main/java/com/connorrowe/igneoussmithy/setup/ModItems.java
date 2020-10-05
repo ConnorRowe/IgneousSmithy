@@ -8,6 +8,7 @@ import net.minecraftforge.fml.RegistryObject;
 public class ModItems
 {
     public static final RegistryObject<Item> BALL_PEEN_HAMMER = Registration.ITEMS.register("ball_peen_hammer", () -> new Item(defProps()));
+    public static final RegistryObject<Item> BLAZING_INGOT = Registration.ITEMS.register("blazing_ingot", () -> new Item(defProps()));
 
     public static final RegistryObject<ToolHead> PICKAXE_HEAD = Registration.ITEMS.register("pickaxe_head", () -> new ToolHead(ToolType.PICKAXE));
     public static final RegistryObject<ToolHead> SHOVEL_HEAD = Registration.ITEMS.register("shovel_head", () -> new ToolHead(ToolType.SHOVEL));

@@ -1,0 +1,29 @@
+{
+  "name": "material.igneoussmithy.blazing",
+  "colour": "FAAE2E",
+  "apply_colour": true,
+  "texture": "shiny",
+  "rarity": 1,
+  "attack_damage": 6.0,
+  "harvest_level": 2,
+  "durability": 414,
+  "efficiency": 10.0,
+  "enchantability": 20,
+  "binding": {
+    "multiplier": 1.0,
+    "durability": 50
+  },
+  "repair": [
+    {
+      "item": "igneoussmithy:blazing_ingot"
+    }
+  ],
+  "traits": {
+    "all": [
+      "on_fire"
+    ],
+    "head_only": [
+      "hot_head"
+    ]
+  }
+}

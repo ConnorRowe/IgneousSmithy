@@ -9,5 +9,5 @@ import javax.annotation.Nullable;
 
 public interface ITraitConsumer
 {
-    float execute(ItemStack stack, @Nullable LivingEntity player, @Nullable Entity other, @Nullable World world, float value);
+    float execute(ItemStack stack, @Nullable LivingEntity player, @Nullable Entity other, @Nullable World world, float value, @Nullable Object object);
 }

@@ -9,10 +9,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.ToolItem;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
@@ -73,20 +70,20 @@ public class DynamicTool extends ToolItem
         {
             if (!getBroken(stack) && stack.getItem() instanceof DynamicTool && !attacker.world.isRemote)
             {
-                getAllTraitsForEvent(stack, Trait.TraitEvent.hitEntity).forEach(t -> t.traitConsumer.execute(stack, attacker, target, attacker.world, 0));
+                getAllTraitsForEvent(stack, Trait.TraitEvent.hitEntity).forEach(t -> t.traitConsumer.execute(stack, attacker, target, attacker.world, 0, null));
 
                 AtomicReference<Float> damage = new AtomicReference<>(DynamicTool.getHeadMat(stack).attackDamage);
 
-                getAllTraitsForEvent(stack, Trait.TraitEvent.calcAttackDamage).forEach(t -> damage.set(t.traitConsumer.execute(stack, attacker, target, attacker.world, damage.get())));
+                getAllTraitsForEvent(stack, Trait.TraitEvent.calcAttackDamage).forEach(t -> damage.set(t.traitConsumer.execute(stack, attacker, target, attacker.world, damage.get(), null)));
 
                 if (attacker instanceof PlayerEntity)
                     target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), damage.get());
                 else
                     target.attackEntityFrom(DamageSource.GENERIC, damage.get());
             }
-            return true;
-        } else
-            return super.hitEntity(stack, target, attacker);
+        }
+
+        return super.hitEntity(stack, target, attacker);
     }
 
     public static void initialiseStack(ItemStack stack)
@@ -96,6 +93,7 @@ public class DynamicTool extends ToolItem
         compound.putBoolean(NBT_BROKEN, false);
         compound.put(NBT_MODIFIERS, new ListNBT());
         compound.putInt(NBT_MAX_MODIFIERS, 3);
+        compound.putInt("HideFlags", 1);
     }
 
     public static void setMaterials(ItemStack stack, Material headMaterial, Material bindMaterial, Material handleMaterial)
@@ -156,7 +154,7 @@ public class DynamicTool extends ToolItem
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving)
     {
-        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, entityLiving, null, worldIn, 0));
+        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, entityLiving, null, worldIn, 0, pos));
 
         return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
     }
@@ -278,7 +276,7 @@ public class DynamicTool extends ToolItem
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
         getAllTraitsForEvent(stack, Trait.TraitEvent.inventoryTick).forEach(t ->
-                t.traitConsumer.execute(stack, null, entityIn, worldIn, 0));
+                t.traitConsumer.execute(stack, null, entityIn, worldIn, 0, null));
     }
 
     @Override
@@ -291,7 +289,7 @@ public class DynamicTool extends ToolItem
         }
 
         getAllTraitsForEvent(stack, Trait.TraitEvent.damageItem).forEach(t ->
-                t.traitConsumer.execute(stack, entity, null, null, 0));
+                t.traitConsumer.execute(stack, entity, null, null, 0, null));
 
         return amount;
     }
@@ -372,6 +370,12 @@ public class DynamicTool extends ToolItem
     }
 
     @Override
+    public Rarity getRarity(ItemStack stack)
+    {
+        return Rarity.COMMON;
+    }
+
+    @Override
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<ITextComponent> tooltip, @Nonnull ITooltipFlag flagIn)
     {
         if (!getHeadMat(stack).equals(MaterialManager.FAKE_MAT) && getHeadMat(stack) != null)
@@ -421,6 +425,12 @@ public class DynamicTool extends ToolItem
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
+    @Override
+    public boolean hasEffect(ItemStack stack)
+    {
+        return false;
+    }
+
     public static List<Trait> getAllTraits(ItemStack stack)
     {
         List<Trait> traits = new ArrayList<>();
@@ -459,8 +469,13 @@ public class DynamicTool extends ToolItem
         return traits;
     }
 
-    public List<Trait> getAllTraitsForEvent(ItemStack stack, Trait.TraitEvent traitEvent)
+    public static List<Trait> getAllTraitsForEvent(ItemStack stack, Trait.TraitEvent traitEvent)
     {
         return getAllTraits(stack).stream().filter(t -> t.event.equals(traitEvent)).collect(Collectors.toList());
+    }
+
+    public static void onStackCrafted(ItemStack stack)
+    {
+        getAllTraitsForEvent(stack, Trait.TraitEvent.onAddedToItem).forEach(trait -> trait.traitConsumer.execute(stack, null, null, null, 1f, null));
     }
 }
