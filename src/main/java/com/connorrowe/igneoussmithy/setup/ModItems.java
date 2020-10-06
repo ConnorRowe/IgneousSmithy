@@ -9,8 +9,9 @@ import java.util.function.Supplier;
 
 public class ModItems
 {
-    public static final RegistryObject<Item> BALL_PEEN_HAMMER = register("ball_peen_hammer", () -> new Item(defProps()));
+    public static final RegistryObject<Item> BALL_PEEN_HAMMER = register("ball_peen_hammer", () -> new Item(defProps(1)));
     public static final RegistryObject<Item> BLAZING_INGOT = register("blazing_ingot", () -> new Item(defProps()));
+    public static final RegistryObject<Item> OBSIDIAN_SHARD = register("obsidian_shard", () -> new Item(defProps()));
 
     public static final RegistryObject<ToolHead> PICKAXE_HEAD = register("pickaxe_head", () -> new ToolHead(ToolType.PICKAXE));
     public static final RegistryObject<ToolHead> SHOVEL_HEAD = register("shovel_head", () -> new ToolHead(ToolType.SHOVEL));
@@ -37,7 +38,12 @@ public class ModItems
 
     private static Item.Properties defProps()
     {
-        return new Item.Properties().maxStackSize(1).group(IgneousSmithy.IgneousGroup.instance);
+        return defProps(64);
+    }
+
+    private static Item.Properties defProps(int maxStackSize)
+    {
+        return new Item.Properties().maxStackSize(maxStackSize).group(IgneousSmithy.IgneousGroup.instance);
     }
 
     static void register()

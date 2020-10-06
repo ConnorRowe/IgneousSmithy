@@ -6,9 +6,9 @@ public final class PartType
 {
     public static ArrayList<PartType> ALL_PARTS = new ArrayList<>();
 
-    public static final PartType HEAD = create("Head", "part.igneoussmithy.head");
-    public static final PartType BINDING = create("Binding", "part.igneoussmithy.binding");
-    public static final PartType HANDLE = create("Handle", "part.igneoussmithy.handle");
+    public static final PartType HEAD = create("head", "part.igneoussmithy.head");
+    public static final PartType BINDING = create("binding", "part.igneoussmithy.binding");
+    public static final PartType HANDLE = create("handle", "part.igneoussmithy.handle");
 
     private static PartType create(String id, String nameKey)
     {

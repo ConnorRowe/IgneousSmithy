@@ -88,6 +88,14 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                 ColourHelper.colorQuads(layerModel, materials.get(layer.materialIndex).colour, random, builder);
             else
                 builder.addAll(layerModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
+
+            if (materials.get(layer.materialIndex).texture.equals("shiny"))
+            {
+                IBakedModel glintModel = ModelHelper.getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides,
+                        new ResourceLocation(IgneousSmithy.MODID, "item/tool/" + layer.baseTexture + "_glint"));
+
+                builder.addAll(glintModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
+            }
         }
 
         for (Modifier modifier : modifiers)
@@ -111,7 +119,6 @@ public final class ToolModel implements IModelGeometry<ToolModel>
                     new ResourceLocation(IgneousSmithy.MODID, "item/tool/broken"));
             builder.addAll(brokenModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
         }
-
 
         return new PerspectiveItemModel(builder.build(), particleSprite,
                 PerspectiveMapWrapper.getTransforms(modelTransform), overrides,

@@ -1,0 +1,12 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:obsidian_shard",
+    "count": 2
+  }
+}

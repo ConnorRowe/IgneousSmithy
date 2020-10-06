@@ -1,0 +1,29 @@
+{
+  "name": "material.igneoussmithy.obsidian",
+  "colour": "4b326c",
+  "apply_colour": true,
+  "texture": "shiny",
+  "rarity": 1,
+  "attack_damage": 4.0,
+  "harvest_level": 1,
+  "durability": 750,
+  "efficiency": 5.0,
+  "enchantability": 22,
+  "binding": {
+    "multiplier": 1.0,
+    "durability": -50
+  },
+  "repair": [
+    {
+      "item": "igneoussmithy:obsidian_shard"
+    }
+  ],
+  "traits": {
+    "all": [
+      "brittle"
+    ],
+    "head_only": [
+
+    ]
+  }
+}

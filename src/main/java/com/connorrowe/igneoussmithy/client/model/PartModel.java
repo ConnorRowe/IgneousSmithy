@@ -92,6 +92,17 @@ public final class PartModel implements IModelGeometry<PartModel>
         if (material.applyColour || fallBack)
             ColourHelper.colorQuads(model, material.colour, random, builder);
 
+        // Glint
+        if (material.texture.equals("shiny"))
+        {
+            IBakedModel glintModel = ModelHelper.getBakedLayerModel(owner, bakery, spriteGetter, modelTransform, overrides,
+                    new ResourceLocation(IgneousSmithy.MODID, "item/" +
+                            (partType.equals(PartType.BINDING) ? "part/" : "tool/") +
+                            (partType.equals(PartType.HEAD) && toolHead != null ? toolHead.getToolType().id + "_head" : partType.id) +
+                            "_glint"));
+            builder.addAll(glintModel.getQuads(null, null, random, EmptyModelData.INSTANCE));
+        }
+
         TextureAtlasSprite particleSprite = model.getParticleTexture(EmptyModelData.INSTANCE);
 
         return new PerspectiveItemModel(builder.build(), particleSprite,
