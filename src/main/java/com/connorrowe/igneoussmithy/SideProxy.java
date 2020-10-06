@@ -5,6 +5,7 @@ import com.connorrowe.igneoussmithy.client.model.PartLoader;
 import com.connorrowe.igneoussmithy.client.model.ToolLoader;
 import com.connorrowe.igneoussmithy.data.MaterialManager;
 import com.connorrowe.igneoussmithy.items.Modifier;
+import com.connorrowe.igneoussmithy.items.ToolType;
 import com.connorrowe.igneoussmithy.items.Trait;
 import com.connorrowe.igneoussmithy.setup.ModTileEntities;
 import com.connorrowe.igneoussmithy.setup.Registration;
@@ -104,7 +105,7 @@ class SideProxy implements IProxy
             AtlasTexture map = evt.getMap();
 
             // For a new "texture" to be used in the material data JSONs, it has to be added here first
-            String[] knownMaterialTextures = new String[]{"shiny", "dull", "cactus", "bone"};
+            final String[] knownMaterialTextures = new String[]{"shiny", "dull", "cactus", "bone"};
 
             if (map.getTextureLocation() == PlayerContainer.LOCATION_BLOCKS_TEXTURE)
             {
@@ -121,6 +122,13 @@ class SideProxy implements IProxy
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/sword_handle_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/handle_" + t));
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/part/binding_" + t));
+                }
+
+                for (ToolType t : ToolType.ALL_TOOLS)
+                {
+                    String id = t.id;
+
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/" + id + "_mending_mycelium"));
                 }
 
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/broken"));

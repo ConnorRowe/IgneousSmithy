@@ -1,0 +1,17 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "tag": "minecraft:crimson_stems"
+    },
+    {
+      "item": "minecraft:mycelium"
+    },
+    {
+      "tag": "forge:crops/nether_wart"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:mending_mycelium"
+  }
+}
