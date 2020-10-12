@@ -129,6 +129,7 @@ class SideProxy implements IProxy
                     String id = t.id;
 
                     evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/" + id + "_mending_mycelium"));
+                    evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/" + id + "_geode"));
                 }
 
                 evt.addSprite(new ResourceLocation(IgneousSmithy.MODID, "item/tool/broken"));

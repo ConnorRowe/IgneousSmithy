@@ -21,12 +21,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -64,17 +62,17 @@ public class DynamicTool extends ToolItem
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker)
+    public boolean hitEntity(@Nonnull ItemStack stack, @Nonnull LivingEntity target, @Nonnull LivingEntity attacker)
     {
         if (this.toolType.equals(ToolType.SWORD))
         {
             if (!getBroken(stack) && stack.getItem() instanceof DynamicTool && !attacker.world.isRemote)
             {
-                getAllTraitsForEvent(stack, Trait.TraitEvent.hitEntity).forEach(t -> t.traitConsumer.execute(stack, attacker, target, attacker.world, 0, null));
+                getAllTraitsForEvent(stack, Trait.TraitEvent.hitEntity).forEach(t -> t.traitConsumer.execute(stack, t.currentLevel, attacker, target, attacker.world, 0, null));
 
                 AtomicReference<Float> damage = new AtomicReference<>(DynamicTool.getHeadMat(stack).attackDamage);
 
-                getAllTraitsForEvent(stack, Trait.TraitEvent.calcAttackDamage).forEach(t -> damage.set(t.traitConsumer.execute(stack, attacker, target, attacker.world, damage.get(), null)));
+                getAllTraitsForEvent(stack, Trait.TraitEvent.calcAttackDamage).forEach(t -> damage.set(t.traitConsumer.execute(stack, t.currentLevel, attacker, target, attacker.world, damage.get(), null)));
 
                 if (attacker instanceof PlayerEntity)
                     target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), damage.get());
@@ -139,7 +137,9 @@ public class DynamicTool extends ToolItem
 
         ListNBT modifiers = tag.getList(NBT_MODIFIERS, 10);
 
-        if (modifiers.size() < tag.getInt(NBT_MAX_MODIFIERS))
+        Trait existingTrait = findTraitInCollection(getAllTraits(stack), test -> test.nameKey.equals(modifier.trait.nameKey));
+
+        if (modifiers.size() < tag.getInt(NBT_MAX_MODIFIERS) && (existingTrait == null || existingTrait.currentLevel < existingTrait.maxLevels))
         {
             CompoundNBT compound = new CompoundNBT();
             compound.putString("name", modifier.name);
@@ -152,9 +152,9 @@ public class DynamicTool extends ToolItem
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving)
+    public boolean onBlockDestroyed(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull LivingEntity entityLiving)
     {
-        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, entityLiving, null, worldIn, 0, pos));
+        getAllTraitsForEvent(stack, Trait.TraitEvent.onBlockDestroyed).forEach(trait -> trait.traitConsumer.execute(stack, trait.currentLevel, entityLiving, null, worldIn, 0, pos));
 
         return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
     }
@@ -276,7 +276,7 @@ public class DynamicTool extends ToolItem
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
         getAllTraitsForEvent(stack, Trait.TraitEvent.inventoryTick).forEach(t ->
-                t.traitConsumer.execute(stack, null, entityIn, worldIn, 0, null));
+                t.traitConsumer.execute(stack, t.currentLevel, null, entityIn, worldIn, 0, null));
     }
 
     @Override
@@ -289,7 +289,7 @@ public class DynamicTool extends ToolItem
         }
 
         getAllTraitsForEvent(stack, Trait.TraitEvent.damageItem).forEach(t ->
-                t.traitConsumer.execute(stack, entity, null, null, 0, null));
+                t.traitConsumer.execute(stack, t.currentLevel, entity, null, null, 0, null));
 
         return amount;
     }
@@ -369,8 +369,9 @@ public class DynamicTool extends ToolItem
 
     }
 
+    @Nonnull
     @Override
-    public Rarity getRarity(ItemStack stack)
+    public Rarity getRarity(@Nonnull ItemStack stack)
     {
         return Rarity.COMMON;
     }
@@ -426,7 +427,7 @@ public class DynamicTool extends ToolItem
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack)
+    public boolean hasEffect(@Nonnull ItemStack stack)
     {
         return false;
     }
@@ -442,27 +443,49 @@ public class DynamicTool extends ToolItem
             {
                 mats.get(i).headOnlyTraits.forEach(t ->
                 {
-                    if (!traits.contains(t))
+                    Trait trait = findTraitInCollection(traits, test -> test.nameKey.equals(t.nameKey));
+                    if (trait == null)
                     {
-                        traits.add(t);
+                        traits.add(t.copy());
+                    } else
+                    {
+                        if (trait.currentLevel < trait.maxLevels)
+                        {
+                            trait.currentLevel += 1;
+                        }
                     }
                 });
             }
 
             mats.get(i).allTraits.forEach(t ->
             {
-                if (!traits.contains(t))
+                Trait trait = findTraitInCollection(traits, test -> test.nameKey.equals(t.nameKey));
+                if (trait == null)
                 {
-                    traits.add(t);
+                    traits.add(t.copy());
+                } else
+                {
+                    if (trait.currentLevel < trait.maxLevels)
+                    {
+                        trait.currentLevel += 1;
+                    }
                 }
             });
         }
 
         getModifiers(stack).forEach(m ->
         {
-            if (!traits.contains(m.trait))
+            Trait trait = findTraitInCollection(traits, test -> test.nameKey.equals(m.trait.nameKey));
+
+            if (trait == null)
             {
-                traits.add(m.trait);
+                traits.add(m.trait.copy());
+            } else
+            {
+                if (trait.currentLevel < trait.maxLevels)
+                {
+                    trait.currentLevel += 1;
+                }
             }
         });
 
@@ -476,6 +499,17 @@ public class DynamicTool extends ToolItem
 
     public static void onStackCrafted(ItemStack stack)
     {
-        getAllTraitsForEvent(stack, Trait.TraitEvent.onAddedToItem).forEach(trait -> trait.traitConsumer.execute(stack, null, null, null, 1f, null));
+        getAllTraitsForEvent(stack, Trait.TraitEvent.onAddedToItem).forEach(trait -> trait.traitConsumer.execute(stack, trait.currentLevel, null, null, null, 1f, null));
+    }
+
+    private static Trait findTraitInCollection(Collection<Trait> traits, Predicate<Trait> predicate)
+    {
+        for (Trait trait : traits)
+        {
+            if (predicate.test(trait))
+                return trait;
+        }
+
+        return null;
     }
 }

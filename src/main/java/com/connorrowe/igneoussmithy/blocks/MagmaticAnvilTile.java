@@ -299,12 +299,14 @@ public class MagmaticAnvilTile extends TileEntity
                         if (modifier != null)
                         {
                             ItemStack toolStack = h.getStackInSlot(toolSlot).copy();
-                            if (!DynamicTool.getModifiers(toolStack).contains(modifier) && modifier.applicableTools.contains(((DynamicTool) toolStack.getItem()).toolType))
+                            if (modifier.applicableTools.contains(((DynamicTool) toolStack.getItem()).toolType))
                             {
                                 if (DynamicTool.addModifier(toolStack, modifier))
                                 {
                                     h.getStackInSlot(modifierSlot).setCount(h.getStackInSlot(modifierSlot).getCount() - 1);
                                     h.extractItem(toolSlot, 1, false);
+
+                                    DynamicTool.onStackCrafted(toolStack);
 
                                     outputHandler.setStackInSlot(0, toolStack);
                                     tankHandler.drain(100, IFluidHandler.FluidAction.EXECUTE);

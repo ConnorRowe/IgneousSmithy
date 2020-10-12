@@ -1,0 +1,17 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "item": "minecraft:blackstone"
+    },
+    {
+      "tag": "forge:storage_blocks/emerald"
+    },
+    {
+      "tag": "forge:dyes/purple"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:fortuitous_geode"
+  }
+}

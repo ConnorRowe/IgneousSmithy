@@ -20,7 +20,7 @@ public class ModifierItem extends Item
 
     public ModifierItem(String modifierName)
     {
-        super(new Properties().maxStackSize(1).group(IgneousSmithy.IgneousGroup.instance));
+        super(new Properties().group(IgneousSmithy.IgneousGroup.instance));
         this.modifierName = modifierName;
     }
 

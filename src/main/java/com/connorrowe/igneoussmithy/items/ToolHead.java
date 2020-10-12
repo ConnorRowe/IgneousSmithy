@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToolHead extends ToolPart
@@ -34,12 +35,26 @@ public class ToolHead extends ToolPart
     @Override
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<ITextComponent> tooltip, @Nonnull ITooltipFlag flagIn)
     {
-        Material mat = ToolPart.getMaterial(stack);
+        Material mat = getMaterial(stack);
 
         if (mat != null && mat != MaterialManager.FAKE_MAT)
-            mat.headOnlyTraits.forEach(t -> tooltip.add(t.getName()));
+        {
+            List<ITextComponent> info = getMaterialTooltip(mat, PartType.HEAD);
 
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+            List<Trait> traits = new ArrayList<>(mat.allTraits);
+
+            mat.headOnlyTraits.forEach(t ->
+            {
+                if (!traits.contains(t))
+                    traits.add(t);
+            });
+
+            traits.forEach(t -> tooltip.add(t.getName()));
+
+            tooltip.addAll(info);
+        }
+
+        //super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Nonnull
