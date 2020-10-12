@@ -1,0 +1,17 @@
+{
+  "type": "igneoussmithy:anvil",
+  "ingredients": [
+    {
+      "tag": "minecraft:wool"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    },
+    {
+      "tag": "forge:ingots/gold"
+    }
+  ],
+  "result": {
+    "item": "igneoussmithy:silken_wrappings"
+  }
+}

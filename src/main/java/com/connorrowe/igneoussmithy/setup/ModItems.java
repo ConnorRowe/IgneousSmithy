@@ -36,6 +36,7 @@ public class ModItems
     public static final RegistryObject<ModifierItem> JAGGED_QUARTZ = register("jagged_quartz", () -> new ModifierItem("jagged"));
     public static final RegistryObject<ModifierItem> MENDING_MYCELIUM = register("mending_mycelium", () -> new ModifierItem("mending_mycelium"));
     public static final RegistryObject<ModifierItem> FORTUITOUS_GEODE = register("fortuitous_geode", () -> new ModifierItem("fortuitous_geode"));
+    public static final RegistryObject<ModifierItem> SILKEN_WRAPPINGS = register("silken_wrappings", () -> new ModifierItem("silken_wrappings"));
 
     private static Item.Properties defProps()
     {

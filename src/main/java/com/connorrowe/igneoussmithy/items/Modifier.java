@@ -18,10 +18,11 @@ public class Modifier
 
     public static void register()
     {
-        create("lucky_charm", Trait.get("treasure"), ImmutableSet.of(ToolType.PICKAXE), new ResourceLocation(IgneousSmithy.MODID, "lucky_charm"), 0xFFFFFF, null);
-        create("jagged", Trait.get("jagged"), ImmutableSet.of(ToolType.SWORD), new ResourceLocation(IgneousSmithy.MODID, "jagged_quartz"), 0xFFFFFF, null);
-        create("mending_mycelium", Trait.get("mending"), ToolType.ALL_TOOLS, new ResourceLocation(IgneousSmithy.MODID, "mending_mycelium"), 0xFFFFFF, null);
-        create("fortuitous_geode", Trait.get("fortune"), ToolType.ALL_TOOLS, new ResourceLocation(IgneousSmithy.MODID, "geode"), 0xFFFFFF, null);
+        create("lucky_charm", Trait.get("treasure"), ImmutableSet.of(ToolType.PICKAXE), res("lucky_charm"), 0xFFFFFF, null);
+        create("jagged", Trait.get("jagged"), ImmutableSet.of(ToolType.SWORD), res("jagged_quartz"), 0xFFFFFF, null);
+        create("mending_mycelium", Trait.get("mending"), ToolType.ALL_TOOLS, res("mending_mycelium"), 0xFFFFFF, null);
+        create("fortuitous_geode", Trait.get("fortune"), ToolType.ALL_TOOLS, res("geode"), 0xFFFFFF, null);
+        create("silken_wrappings", Trait.get("silk_touch"), ImmutableSet.of(ToolType.PICKAXE, ToolType.HATCHET, ToolType.SHOVEL), res("silk"), 0xFFFFFF, null);
     }
 
     private static void create(String name, Trait trait, Set<ToolType> applicableTools, ResourceLocation texture, int colour, @Nullable Consumer<ItemStack> modifyStack)
@@ -68,5 +69,10 @@ public class Modifier
         {
             return MAP.get(name);
         }
+    }
+
+    private static ResourceLocation res(String path)
+    {
+        return new ResourceLocation(IgneousSmithy.MODID, path);
     }
 }

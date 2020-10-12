@@ -154,6 +154,24 @@ public class Trait
 
             return 1f;
         });
+
+        create("silk_touch", "enchantment.minecraft.silk_touch", "trait.igneoussmithy.silk_touch.desc", TraitEvent.onAddedToItem, 0xD7B037, 1, (stack, traitLevel, player, other, world, value, object) ->
+        {
+            Map<Enchantment, Integer> stackEnchants = EnchantmentHelper.getEnchantments(stack);
+
+            if (value > 0f)
+            {
+                stackEnchants.put(Enchantments.SILK_TOUCH, traitLevel);
+            } else
+            {
+                // remove enchant
+                stackEnchants.remove(Enchantments.SILK_TOUCH);
+            }
+
+            EnchantmentHelper.setEnchantments(stackEnchants, stack);
+
+            return 1f;
+        });
     }
 
     public String nameKey;
