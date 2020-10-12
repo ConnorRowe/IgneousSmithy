@@ -9,7 +9,7 @@ A mod for Minecraft 1.16 which adds the ability to craft custom tools out of dif
 - [x] Shovel
 - [x] Hatchet
 - [x] Sword
-- [x] Traits
+- [x] Material Traits
 - [x] Modifiers
 - [x] JEI support
 - [x] Immersive Engineering metals support
